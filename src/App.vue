@@ -1,11 +1,30 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Logo from './components/Logo.vue'
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div class="page">
+    <header>
+      <Logo />
+    </header>
+    <main>
+      <div class="scroll-space"></div>
+    </main>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.page {
+  min-height: 300vh;
+}
+
+header {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+}
+
+.scroll-space {
+  height: 300vh;
+}
+</style>
