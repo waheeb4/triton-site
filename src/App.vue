@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Logo from './components/Logo.vue'
+import ModelViewer from './components/ModelViewer.vue'
 </script>
 
 <template>
@@ -7,6 +8,9 @@ import Logo from './components/Logo.vue'
     <header>
       <Logo />
     </header>
+    <div class="model">
+      <ModelViewer />
+    </div>
     <main>
       <div class="scroll-space"></div>
     </main>
@@ -22,6 +26,12 @@ header {
   position: fixed;
   top: 1rem;
   left: 1rem;
+}
+
+.model {
+  position: fixed;
+  top: 0;
+  right: 1rem;
 }
 
 .scroll-space {

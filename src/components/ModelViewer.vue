@@ -1,0 +1,99 @@
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue'
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import modelUrl from '../assets/baymax-optimized.glb'
+
+const canvasRef = ref<HTMLCanvasElement | null>(null)
+let cleanup = () => {}
+
+onMounted(() => {
+  const canvas = canvasRef.value!
+  const SIZE = 80
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
+  renderer.setPixelRatio(window.devicePixelRatio)
+  renderer.setSize(SIZE, SIZE)
+
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000)
+
+  scene.add(new THREE.AmbientLight(0xffffff, 2))
+  const dir = new THREE.DirectionalLight(0xffffff, 2)
+  dir.position.set(1, 2, 3)
+  scene.add(dir)
+
+  let model: THREE.Object3D | null = null
+  let maxDim = 1
+
+  const dracoLoader = new DRACOLoader()
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
+
+  const loader = new GLTFLoader()
+  loader.setDRACOLoader(dracoLoader)
+  loader.load(modelUrl, (gltf) => {
+    model = gltf.scene
+
+    const box = new THREE.Box3().setFromObject(model)
+    const center = box.getCenter(new THREE.Vector3())
+    const size = box.getSize(new THREE.Vector3())
+    maxDim = Math.max(size.x, size.y, size.z)
+
+    model.position.sub(center)
+    camera.position.set(0, 0, maxDim * 1.6)
+    camera.near = maxDim * 0.01
+    camera.far = maxDim * 10
+    camera.updateProjectionMatrix()
+
+    scene.add(model)
+  })
+
+  let targetRotX = 0, targetRotY = 0
+  let currentRotX = 0, currentRotY = 0
+
+  function onMouseMove(e: MouseEvent) {
+    const rect = canvas.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const dx = e.clientX - cx
+    const dy = e.clientY - cy
+    targetRotY = -Math.atan2(-dx, 400)
+    targetRotX = Math.atan2(dy, 400)
+  }
+  window.addEventListener('mousemove', onMouseMove)
+
+  let rafId: number
+  function animate() {
+    rafId = requestAnimationFrame(animate)
+    currentRotX += (targetRotX - currentRotX) * 0.1
+    currentRotY += (targetRotY - currentRotY) * 0.1
+    if (model) {
+      model.rotation.x = currentRotX
+      model.rotation.y = currentRotY
+    }
+    renderer.render(scene, camera)
+  }
+  animate()
+
+  cleanup = () => {
+    cancelAnimationFrame(rafId)
+    window.removeEventListener('mousemove', onMouseMove)
+    renderer.dispose()
+  }
+})
+
+onUnmounted(() => cleanup())
+</script>
+
+<template>
+  <canvas ref="canvasRef"></canvas>
+</template>
+
+<style scoped>
+canvas {
+  display: block;
+  width: 80px;
+  height: 80px;
+}
+</style>
