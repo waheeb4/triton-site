@@ -1,16 +1,67 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import gsap from 'gsap'
 import NavBar from './components/NavBar.vue'
 import Logo from './components/Logo.vue'
 import Hero from './components/Hero.vue'
+import SplashScreen from './components/SplashScreen.vue'
+
+const logoAnchorRef = ref<HTMLElement>()
+const splashDone = ref(false)
+const bgGone = ref(false)
+const loaded = ref(false)
+
+onMounted(async () => {
+  const el = logoAnchorRef.value!
+  const rect = el.getBoundingClientRect()
+
+  // How far to move the logo to reach screen center
+  const dx = window.innerWidth  / 2 - (rect.left + rect.width  / 2)
+  const dy = window.innerHeight / 2 - (rect.top  + rect.height / 2)
+  const scale = 160 / rect.height   // grow from natural 52px to 160px
+
+  gsap.set(el, { x: dx, y: dy, scale })
+
+  // Bob while splash is showing
+  const bobTween = gsap.to(el, {
+    y: dy - 16,
+    duration: 1.5,
+    ease: 'sine.inOut',
+    yoyo: true,
+    repeat: -1,
+  })
+
+  const minWait = new Promise<void>(r => setTimeout(r, 2200))
+  await Promise.all([document.fonts.ready, minWait])
+
+  bobTween.kill()
+  loaded.value = true  // tells SplashScreen bg to start fading
+
+  // Fly logo back to its natural corner position
+  gsap.to(el, {
+    x: 0,
+    y: 0,
+    scale: 1,
+    duration: 0.8,
+    ease: 'power3.inOut',
+    onComplete: () => { splashDone.value = true },
+  })
+})
 </script>
 
 <template>
   <div class="page">
-    <div class="logo-anchor">
+    <SplashScreen
+      v-if="!bgGone"
+      :loaded="loaded"
+      @done="bgGone = true"
+    />
+
+    <div ref="logoAnchorRef" class="logo-anchor">
       <Logo />
     </div>
     <NavBar />
-    <Hero />
+    <Hero :animate-ready="splashDone" />
     <main>
       <div class="scroll-space" />
     </main>
@@ -34,7 +85,7 @@ import Hero from './components/Hero.vue'
   position: fixed;
   top: 17px;
   left: 20px;
-  z-index: 100;
+  z-index: 10000;  /* above splash bg (9999) so logo is always visible */
 }
 
 .scroll-space {
