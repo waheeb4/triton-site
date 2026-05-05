@@ -3,14 +3,14 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
-import modelUrl from '../assets/baymax-optimized.glb'
+import modelUrl from '../assets/baymax-final.glb'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let cleanup = () => {}
 
 onMounted(() => {
   const canvas = canvasRef.value!
-  const SIZE = 80
+  const SIZE = 60
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
   renderer.setPixelRatio(window.devicePixelRatio)
@@ -45,6 +45,21 @@ onMounted(() => {
     camera.near = maxDim * 0.01
     camera.far = maxDim * 10
     camera.updateProjectionMatrix()
+
+    // recolor red accent parts (thrusters/grippers) to Triton blue
+    const tritonBlue = new THREE.MeshStandardMaterial({ color: 0x1a56db, metalness: 0.45, roughness: 0.4 })
+    const redMats = new Set(['candyappleredcarpainthq', 'redsofttouchplastic', 'redlowglossplastic'])
+    model.traverse((child) => {
+      if (!(child as THREE.Mesh).isMesh) return
+      const mesh = child as THREE.Mesh
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+      mats.forEach((mat, i) => {
+        if (redMats.has((mat as THREE.Material).name)) {
+          if (Array.isArray(mesh.material)) mesh.material[i] = tritonBlue
+          else mesh.material = tritonBlue
+        }
+      })
+    })
 
     scene.add(model)
   })
@@ -93,7 +108,7 @@ onUnmounted(() => cleanup())
 <style scoped>
 canvas {
   display: block;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
 }
 </style>
