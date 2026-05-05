@@ -7,6 +7,6 @@ export const hero = {
 }
 
 export const nav = {
-  left: ['Home', 'Mate'],
-  right: ['Code', 'Contact'],
+  left: ['Home', 'Competition'],
+  right: ['Docs', 'Contact'],
 }

@@ -32,7 +32,7 @@ import Hero from './components/Hero.vue'
 
 .logo-anchor {
   position: fixed;
-  top: 12px;
+  top: 17px;
   left: 20px;
   z-index: 100;
 }

@@ -7,18 +7,18 @@ const rightItems = nav.right.map(label => ({ label, href: `#${label.toLowerCase(
 </script>
 
 <template>
-  <nav class="navbar">
-    <div class="nav-group">
+  <nav class="nav-root">
+    <div class="nav-arm nav-arm--left">
       <a v-for="item in leftItems" :key="item.label" :href="item.href" class="nav-item">
         {{ item.label }}
       </a>
     </div>
 
-    <div class="rov-bubble">
+    <div class="model-slot">
       <ModelViewer />
     </div>
 
-    <div class="nav-group">
+    <div class="nav-arm nav-arm--right">
       <a v-for="item in rightItems" :key="item.label" :href="item.href" class="nav-item">
         {{ item.label }}
       </a>
@@ -27,35 +27,52 @@ const rightItems = nav.right.map(label => ({ label, href: `#${label.toLowerCase(
 </template>
 
 <style scoped>
-.navbar {
+.nav-root {
   position: fixed;
-  top: 16px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 12px;
-  box-shadow: 0 2px 32px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  gap: 0;
   z-index: 100;
   white-space: nowrap;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.10);
+  border-radius: 10px;
   overflow: visible;
 }
 
-.nav-group {
+.nav-arm {
+  height: 52px;
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
+.nav-arm--left {
+  padding: 0 12px 0 12px;
+}
+
+.nav-arm--right {
+  padding: 0 12px 0 12px;
+}
+
+.model-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
 .nav-item {
-  padding: 7px 18px;
-  border-radius: 8px;
+  padding: 7px 16px;
+  border-radius: 5px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -65,24 +82,9 @@ const rightItems = nav.right.map(label => ({ label, href: `#${label.toLowerCase(
 }
 
 .nav-item:hover {
-  background: #38bdf8;
+  background: rgba(56, 189, 248, 0.2);
   color: #0d2b5e;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.45);
-}
-
-.rov-bubble {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(13, 43, 94, 0.25);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin: -18px 6px;
-  box-shadow: 0 4px 20px rgba(13, 43, 94, 0.15);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
 }
 </style>

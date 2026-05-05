@@ -10,7 +10,7 @@ let cleanup = () => {}
 
 onMounted(() => {
   const canvas = canvasRef.value!
-  const SIZE = 60
+  const SIZE = 64
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
   renderer.setPixelRatio(window.devicePixelRatio)
@@ -108,7 +108,7 @@ onUnmounted(() => cleanup())
 <style scoped>
 canvas {
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
 }
 </style>

@@ -2,23 +2,29 @@
 import { onMounted, ref } from 'vue'
 import gsap from 'gsap'
 import { hero } from '../content/index'
+import WaveParticles from './WaveParticles.vue'
 
 const words = [hero.engineering, hero.article, hero.deep, hero.frontier]
 const wordRefs = ref<HTMLElement[]>([])
 
+const wordAnims = [
+  // Engineering — rises from below with front tilt (original)
+  { from: { opacity: 0, y: 60, rotateX: -20 },        ease: 'power3.out',    duration: 0.9 },
+  // the — drifts in from the left with a slight lean
+  { from: { opacity: 0, x: -50, rotateZ: -14 },        ease: 'back.out(1.3)', duration: 0.85 },
+  // Deep — drops from above with a back-tilt
+  { from: { opacity: 0, y: -55, rotateX: 22 },         ease: 'expo.out',      duration: 1.0 },
+  // Frontier — zooms in with a lateral twist
+  { from: { opacity: 0, scale: 0.72, rotateY: -18 },   ease: 'power4.out',    duration: 0.95 },
+]
+
 onMounted(() => {
   wordRefs.value.forEach((el, i) => {
+    const { from, ease, duration } = wordAnims[i]
     gsap.fromTo(
       el,
-      { opacity: 0, y: 60, rotateX: -20 },
-      {
-        opacity: 1,
-        y: 0,
-        rotateX: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        delay: 0.3 + i * 0.15,
-      },
+      from,
+      { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1, ease, duration, delay: 0.3 + i * 0.15 },
     )
   })
 })
@@ -26,6 +32,7 @@ onMounted(() => {
 
 <template>
   <section class="hero">
+    <WaveParticles />
     <div class="sentence">
       <span
         v-for="(word, i) in words"
@@ -49,7 +56,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 0 4vw;
+  padding: 0 4vw 14vh;
 }
 
 /* ── sentence ── */
