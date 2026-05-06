@@ -1,15 +1,25 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import gsap from 'gsap'
+import { VueLenis } from 'lenis/vue'
 import NavBar from './components/NavBar.vue'
 import Logo from './components/Logo.vue'
 import Hero from './components/Hero.vue'
 import SplashScreen from './components/SplashScreen.vue'
 
+const lenisRef = ref()
 const logoAnchorRef = ref<HTMLElement>()
 const splashDone = ref(false)
 const bgGone = ref(false)
 const loaded = ref(false)
+
+watchEffect((onInvalidate) => {
+  if (!lenisRef.value?.lenis) return
+  function tick(time: number) { lenisRef.value.lenis.raf(time * 1000) }
+  gsap.ticker.add(tick)
+  gsap.ticker.lagSmoothing(0)
+  onInvalidate(() => gsap.ticker.remove(tick))
+})
 
 onMounted(async () => {
   const el = logoAnchorRef.value!
@@ -50,6 +60,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <VueLenis root ref="lenisRef" :options="{ autoRaf: false }" />
   <div class="page">
     <SplashScreen
       v-if="!bgGone"

@@ -82,8 +82,8 @@ watch(() => props.animateReady, (ready) => {
 }
 
 .word-0 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 900;
+  font-family: 'Plus Jakarta Sans Variable', sans-serif;
+  font-weight: 800;
   font-size: clamp(3rem, 9vw, 9rem);
   color: #172554;
   letter-spacing: -0.03em;
@@ -105,8 +105,8 @@ watch(() => props.animateReady, (ready) => {
 }
 
 .word-3 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 900;
+  font-family: 'Plus Jakarta Sans Variable', sans-serif;
+  font-weight: 800;
   font-size: clamp(3rem, 9vw, 9rem);
   color: #0c4a6e;
   letter-spacing: -0.04em;
@@ -117,7 +117,7 @@ watch(() => props.animateReady, (ready) => {
   position: relative;
   z-index: 1;
   margin-top: 2rem;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Space Grotesk Variable', sans-serif;
   font-size: 0.95rem;
   font-weight: 400;
   color: rgba(13, 43, 94, 0.5);

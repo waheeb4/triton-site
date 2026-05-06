@@ -66,7 +66,7 @@ const rightItems = nav.right.map(label => ({ label, href: `#${label.toLowerCase(
 .nav-item {
   padding: 7px 16px;
   border-radius: 5px;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Space Grotesk Variable', sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: #0d2b5e;
