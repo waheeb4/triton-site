@@ -1,5 +1,5 @@
 export const hero = {
-  engineering: 'Engineering',
+  engineering: 'Charting',
   article: 'the',
   deep: 'Deep',
   frontier: 'Frontier',
