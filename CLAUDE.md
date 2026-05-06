@@ -59,12 +59,12 @@ export const hero = {
   sub: 'built by triton, tested by the ocean.',
 }
 export const nav = {
-  left: ['About', 'Team'],
-  right: ['Sponsors', 'Contact'],
+  left: ['Home', 'Competition'],
+  right: ['Docs', 'Contact'],
 }
 ```
 
-NavBar derives hrefs automatically: `label.toLowerCase()` → `#about`, `#team`, etc.
+NavBar derives hrefs automatically: `label.toLowerCase()` → `#home`, `#competition`, etc.
 
 ---
 

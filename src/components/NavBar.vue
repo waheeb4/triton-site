@@ -52,14 +52,7 @@ const rightItems = nav.right.map(label => ({ label, href: `#${label.toLowerCase(
   display: flex;
   align-items: center;
   gap: 2px;
-}
-
-.nav-arm--left {
-  padding: 0 12px 0 12px;
-}
-
-.nav-arm--right {
-  padding: 0 12px 0 12px;
+  padding: 0 12px;
 }
 
 .model-slot {

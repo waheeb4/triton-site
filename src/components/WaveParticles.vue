@@ -34,7 +34,7 @@ function draw(ctx: CanvasRenderingContext2D) {
 
     ctx.beginPath()
     ctx.arc(x, y, p.size, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(100,160,240,${alpha.toFixed(2)})`
+    ctx.fillStyle = `rgba(100,160,240,${alpha})`
     ctx.fill()
   }
 }

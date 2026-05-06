@@ -8,6 +8,7 @@ const props = defineProps<{ animateReady: boolean }>()
 
 const words = [hero.engineering, hero.article, hero.deep, hero.frontier]
 const wordRefs = ref<HTMLElement[]>([])
+const subRef = ref<HTMLElement>()
 
 const wordAnims = [
   { from: { opacity: 0, y: 60, rotateX: -20 },        ease: 'power3.out',    duration: 0.9 },
@@ -26,6 +27,9 @@ watch(() => props.animateReady, (ready) => {
       { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1, ease, duration, delay: i * 0.12 },
     )
   })
+  if (subRef.value) {
+    gsap.fromTo(subRef.value, { opacity: 0 }, { opacity: 1, duration: 0.8, delay: 0.5, ease: 'power2.out' })
+  }
 })
 </script>
 
@@ -41,7 +45,7 @@ watch(() => props.animateReady, (ready) => {
       >{{ word }}</span>
     </div>
 
-    <p class="sub">{{ hero.sub }}</p>
+    <p ref="subRef" class="sub">{{ hero.sub }}</p>
     <div class="scroll-cue">↓</div>
   </section>
 </template>
@@ -119,7 +123,6 @@ watch(() => props.animateReady, (ready) => {
   color: rgba(13, 43, 94, 0.5);
   letter-spacing: 0.05em;
   opacity: 0;
-  animation: fadeIn 0.8s 1.2s ease forwards;
 }
 
 .scroll-cue {
@@ -130,8 +133,6 @@ watch(() => props.animateReady, (ready) => {
   color: rgba(13, 43, 94, 0.3);
   animation: bob 2s ease-in-out infinite;
 }
-
-@keyframes fadeIn { to { opacity: 1; } }
 
 @keyframes bob {
   0%, 100% { transform: translateY(0); }

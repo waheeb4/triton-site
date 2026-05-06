@@ -67,10 +67,13 @@ onMounted(() => {
   let targetRotX = 0, targetRotY = 0
   let currentRotX = 0, currentRotY = 0
 
+  let canvasRect = canvas.getBoundingClientRect()
+  function onResize() { canvasRect = canvas.getBoundingClientRect() }
+  window.addEventListener('resize', onResize)
+
   function onMouseMove(e: MouseEvent) {
-    const rect = canvas.getBoundingClientRect()
-    const cx = rect.left + rect.width / 2
-    const cy = rect.top + rect.height / 2
+    const cx = canvasRect.left + canvasRect.width / 2
+    const cy = canvasRect.top + canvasRect.height / 2
     const dx = e.clientX - cx
     const dy = e.clientY - cy
     targetRotY = -Math.atan2(-dx, 400)
@@ -78,22 +81,27 @@ onMounted(() => {
   }
   window.addEventListener('mousemove', onMouseMove)
 
+  let lastFrameTime = performance.now()
   let rafId: number
-  function animate() {
+  function animate(now: number) {
     rafId = requestAnimationFrame(animate)
-    currentRotX += (targetRotX - currentRotX) * 0.1
-    currentRotY += (targetRotY - currentRotY) * 0.1
+    const dt = Math.min(now - lastFrameTime, 100)
+    lastFrameTime = now
+    const f = 1 - Math.pow(0.1, dt / 16.67)
+    currentRotX += (targetRotX - currentRotX) * f
+    currentRotY += (targetRotY - currentRotY) * f
     if (model) {
       model.rotation.x = currentRotX
       model.rotation.y = currentRotY
     }
     renderer.render(scene, camera)
   }
-  animate()
+  rafId = requestAnimationFrame(animate)
 
   cleanup = () => {
     cancelAnimationFrame(rafId)
     window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('resize', onResize)
     renderer.dispose()
   }
 })
