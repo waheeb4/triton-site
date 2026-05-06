@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref, reactive } from 'vue'
+import { watch, ref, reactive, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { hero } from '../content/index'
 import WaveParticles from './WaveParticles.vue'
@@ -13,93 +13,149 @@ const deepRef     = ref<HTMLElement>()
 const frontierRef = ref<HTMLElement>()
 const rovRef      = ref<HTMLElement>()
 const subRef      = ref<HTMLElement>()
+const typedText    = ref('')
+const cursorVisible = ref(false)
 
 // ── Debug panel (off by default — set showDebug = true to re-enable) ──
-const showDebug = ref(false)
+const showDebug  = ref(false)
+const panelOpen  = ref(true)
 const ctrl = reactive({
-  eng:      { x: 268,  y: 196, fs: 223 },
-  the_:     { x: 1608, y: 161, fs: 106 },
-  deep:     { x: 1625, y: 232, fs: 206 },
-  frontier: { x: 625,  y: 786, fs: 369 },
-  rov:      { w: 100,  r: -21, x: 0,   y: 0 },
+  eng:      { x: 13.96, y: 18.15, fs: 223 },
+  the_:     { x: 83.75, y: 14.91, fs: 106 },
+  deep:     { x: 84.64, y: 21.48, fs: 206 },
+  frontier: { x: 32.55, y: 72.78, fs: 369 },
+  rov:      { w: 100,   r: -21,   x: 0,   y: 0,  op: 100 },
+  sub:      { x: 50,   yBottom: 6, fs: 20 },
 })
+// x/y are % of artboard (1920×1080); fs stays in artboard px
 const wordStyle = (c: { x: number; y: number; fs: number }) => ({
-  left: `${c.x}px`, top: `${c.y}px`, fontSize: `${c.fs}px`,
+  left: `${(c.x / 100) * 1920}px`,
+  top:  `${(c.y / 100) * 1080}px`,
+  fontSize: `${c.fs}px`,
 })
+
+// ── Artboard scale: design is 1920px wide, scale to fill viewport ──
+const scale = ref(1)
+function syncScale() {
+  scale.value = window.innerWidth / 1920
+}
+const CTRL_KEY = 'triton-hero-ctrl'
+
+onMounted(() => {
+  syncScale()
+  window.addEventListener('resize', syncScale)
+  try {
+    const saved = localStorage.getItem(CTRL_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      for (const k of Object.keys(parsed) as (keyof typeof ctrl)[]) {
+        if (ctrl[k]) Object.assign(ctrl[k], parsed[k])
+      }
+    }
+  } catch {}
+})
+
+watch(ctrl, (val) => {
+  localStorage.setItem(CTRL_KEY, JSON.stringify(val))
+}, { deep: true })
+onUnmounted(() => {
+  window.removeEventListener('resize', syncScale)
+})
+
+function animate() {
+  const blur = (el: HTMLElement, delay: number) =>
+    gsap.fromTo(el, { opacity: 0, y: 35, filter: 'blur(18px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.05, ease: 'power3.out', delay })
+  blur(engRef.value!,      0.05)
+  blur(theRef.value!,      0.2)
+  blur(deepRef.value!,     0.3)
+  blur(frontierRef.value!, 0.42)
+  gsap.fromTo(rovRef.value!, { opacity: 0, scale: 1.06, filter: 'blur(22px)' }, {
+    opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.3, ease: 'power3.out', delay: 0.1,
+    onComplete() {
+      gsap.to(rovRef.value!, { y: -14, duration: 2.8, ease: 'sine.inOut', yoyo: true, repeat: -1 })
+    },
+  })
+  setTimeout(() => {
+    const full = hero.sub
+    cursorVisible.value = true
+    let i = 0
+    function typeNext() {
+      if (i < full.length) {
+        typedText.value = full.slice(0, ++i)
+        setTimeout(typeNext, i === 15 ? 550 : 40)
+      }
+    }
+    typeNext()
+  }, 550)
+}
 
 watch(() => props.animateReady, (ready) => {
   if (!ready) return
-
   if (showDebug.value) {
     [engRef.value, theRef.value, deepRef.value, frontierRef.value, rovRef.value, subRef.value]
       .forEach(el => el && gsap.set(el, { opacity: 1 }))
     return
   }
-
-  gsap.fromTo(engRef.value!,
-    { opacity: 0, x: -80 },
-    { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 })
-
-  gsap.fromTo(theRef.value!,
-    { opacity: 0, x: 80 },
-    { opacity: 1, x: 0, duration: 0.85, ease: 'back.out(1.3)', delay: 0.18 })
-
-  gsap.fromTo(deepRef.value!,
-    { opacity: 0, x: 100 },
-    { opacity: 1, x: 0, duration: 1.0, ease: 'expo.out', delay: 0.28 })
-
-  gsap.fromTo(frontierRef.value!,
-    { opacity: 0, y: 60 },
-    { opacity: 1, y: 0, duration: 0.95, ease: 'power4.out', delay: 0.4 })
-
-  gsap.fromTo(rovRef.value!,
-    { opacity: 0, scale: 0.88, y: 40 },
-    { opacity: 1, scale: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 })
-
-  gsap.fromTo(subRef.value!,
-    { opacity: 0 },
-    { opacity: 1, duration: 0.8, delay: 0.55, ease: 'power2.out' })
+  animate()
 })
 </script>
 
 <template>
   <section class="hero">
-    <WaveParticles />
+    <!--
+      Artboard: fixed 1920×1080px canvas, absolutely positioned so it never
+      affects document flow. The parent .hero clips it to the viewport.
+      transform: scale(scale) shrinks/grows the whole thing as one unit.
+    -->
+    <div
+      class="artboard"
+      :style="{ transform: `translate(-50%, -50%) scale(${scale})` }"
+    >
+      <WaveParticles />
 
-    <span ref="engRef"      class="word word-eng"      :style="showDebug ? wordStyle(ctrl.eng)      : {}">{{ hero.engineering }}</span>
-    <span ref="theRef"      class="word word-the"      :style="showDebug ? wordStyle(ctrl.the_)     : {}">{{ hero.article }}</span>
-    <span ref="deepRef"     class="word word-deep"     :style="showDebug ? wordStyle(ctrl.deep)     : {}">{{ hero.deep }}</span>
-    <span ref="frontierRef" class="word word-frontier" :style="showDebug ? wordStyle(ctrl.frontier) : {}">{{ hero.frontier }}</span>
+      <span ref="engRef"      class="word word-eng"      :style="wordStyle(ctrl.eng)">{{ hero.engineering }}</span>
+      <span ref="theRef"      class="word word-the"      :style="wordStyle(ctrl.the_)">{{ hero.article }}</span>
+      <span ref="deepRef"     class="word word-deep"     :style="wordStyle(ctrl.deep)">{{ hero.deep }}</span>
+      <span ref="frontierRef" class="word word-frontier" :style="wordStyle(ctrl.frontier)">{{ hero.frontier }}</span>
 
-    <div class="rov-positioner" :style="showDebug ? { transform: `translate(calc(-50% + ${ctrl.rov.x}px), calc(-50% + ${ctrl.rov.y}px))` } : {}">
-      <div ref="rovRef" class="rov-inner">
-        <img :src="rovImg" class="rov-img" :style="showDebug ? { width: `${ctrl.rov.w}vw`, transform: `rotate(${ctrl.rov.r}deg)` } : {}" alt="Triton ROV" draggable="false" />
+      <div class="rov-positioner" :style="{ transform: `translate(calc(-50% + ${ctrl.rov.x}px), calc(-50% + ${ctrl.rov.y}px))` }">
+        <div ref="rovRef" class="rov-inner">
+          <img :src="rovImg" class="rov-img" :style="{ width: `${(ctrl.rov.w / 100) * 1920}px`, transform: `rotate(${ctrl.rov.r}deg)`, opacity: ctrl.rov.op / 100 }" alt="Triton ROV" draggable="false" />
+        </div>
       </div>
+
+      <p ref="subRef" class="sub" :style="{ left: `${ctrl.sub.x}%`, bottom: `${ctrl.sub.yBottom}%`, fontSize: `${ctrl.sub.fs}px` }">{{ showDebug ? hero.sub : typedText }}<span class="cursor" :class="{ 'cursor--on': cursorVisible || showDebug }">|</span></p>
+      <div class="scroll-cue">↓</div>
     </div>
 
-    <p ref="subRef" class="sub">{{ hero.sub }}</p>
-    <div class="scroll-cue">↓</div>
-
-    <!-- Debug panel: set showDebug = true in script to activate -->
+    <!-- Debug panel: position:fixed — unaffected by the artboard scale -->
     <template v-if="showDebug">
-      <button class="debug-toggle" @click="showDebug = false">✕ close</button>
-      <aside class="debug-panel">
+      <button class="debug-toggle" @click="panelOpen = !panelOpen">{{ panelOpen ? '✕' : '⚙' }}</button>
+      <aside v-if="panelOpen" class="debug-panel">
         <template v-for="(cfg, key) in { Engineering: ctrl.eng, 'the': ctrl.the_, Deep: ctrl.deep, Frontier: ctrl.frontier }" :key="key">
           <div class="dp-section">
             <div class="dp-title">{{ key }}</div>
             <div v-for="prop in ['fs','x','y'] as const" :key="prop" class="dp-row">
-              <span class="dp-label">{{ prop }}</span>
-              <input type="range" class="dp-slider" v-model.number="cfg[prop as 'fs'|'x'|'y']" :min="prop==='fs'?0:-500" :max="prop==='fs'?400:2000" />
+              <span class="dp-label">{{ prop === 'fs' ? 'fs' : prop + ' %' }}</span>
+              <input type="range" class="dp-slider" v-model.number="cfg[prop as 'fs'|'x'|'y']" :min="0" :max="prop==='fs'?500:100" :step="prop==='fs'?1:0.1" />
               <input type="number" class="dp-num" v-model.number="cfg[prop as 'fs'|'x'|'y']" />
             </div>
           </div>
         </template>
         <div class="dp-section">
           <div class="dp-title">ROV</div>
-          <div v-for="[label, key, min, max] in [['w (vw)','w',0,200],['rot °','r',-180,180],['x (px)','x',-800,800],['y (px)','y',-800,800]]" :key="key" class="dp-row">
+          <div v-for="[label, key, min, max, step] in [['w %','w',0,100,0.1],['rot °','r',-180,180,1],['x (px)','x',-800,800,1],['y (px)','y',-800,800,1],['opacity','op',0,100,1]]" :key="key" class="dp-row">
             <span class="dp-label">{{ label }}</span>
-            <input type="range" class="dp-slider" v-model.number="ctrl.rov[key as 'w'|'r'|'x'|'y']" :min="min" :max="max" />
-            <input type="number" class="dp-num" v-model.number="ctrl.rov[key as 'w'|'r'|'x'|'y']" />
+            <input type="range" class="dp-slider" v-model.number="ctrl.rov[key as 'w'|'r'|'x'|'y'|'op']" :min="min" :max="max" :step="step" />
+            <input type="number" class="dp-num" v-model.number="ctrl.rov[key as 'w'|'r'|'x'|'y'|'op']" />
+          </div>
+        </div>
+        <div class="dp-section">
+          <div class="dp-title">SUB</div>
+          <div v-for="[label, key, min, max, step] in [['x %','x',0,100,0.1],['bottom %','yBottom',0,100,0.1],['fs (px)','fs',0,60,1]]" :key="key" class="dp-row">
+            <span class="dp-label">{{ label }}</span>
+            <input type="range" class="dp-slider" v-model.number="ctrl.sub[key as 'x'|'yBottom'|'fs']" :min="min" :max="max" :step="step" />
+            <input type="number" class="dp-num" v-model.number="ctrl.sub[key as 'x'|'yBottom'|'fs']" />
           </div>
         </div>
       </aside>
@@ -108,10 +164,27 @@ watch(() => props.animateReady, (ready) => {
 </template>
 
 <style scoped>
+/* Viewport clip: always 100vw × 100vh, never scrolls */
 .hero {
   position: relative;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
+}
+
+/*
+  Artboard: the actual 1920×1080 design canvas.
+  Centered in the hero via top/left 50% + translate(-50%,-50%) so that
+  any leftover space (when viewport is taller than the scaled artboard)
+  is distributed evenly rather than piling up at the bottom.
+*/
+.artboard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: center center;
 }
 
 /* ── ROV ── */
@@ -119,7 +192,6 @@ watch(() => props.animateReady, (ready) => {
   position: absolute;
   top: 46%;
   left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 5;
 }
 
@@ -129,9 +201,7 @@ watch(() => props.animateReady, (ready) => {
 
 .rov-img {
   display: block;
-  width: 100vw;
   height: auto;
-  transform: rotate(-21deg);
   user-select: none;
   filter:
     drop-shadow(0px 60px 120px rgba(0, 5, 40, 0.65))
@@ -149,40 +219,28 @@ watch(() => props.animateReady, (ready) => {
 }
 
 .word-eng {
-  left: 268px;
-  top: 196px;
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
   font-weight: 800;
-  font-size: 223px;
   color: #172554;
   letter-spacing: -0.03em;
 }
 
 .word-the {
-  left: 1608px;
-  top: 161px;
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
   font-weight: 600;
-  font-size: 106px;
   color: rgba(37, 99, 235, 0.75);
 }
 
 .word-deep {
-  left: 1625px;
-  top: 232px;
   font-family: 'DM Serif Display', serif;
   font-style: italic;
-  font-size: 206px;
   color: #1e40af;
 }
 
 .word-frontier {
-  left: 625px;
-  top: 786px;
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
   font-weight: 800;
-  font-size: 369px;
   color: #0c4a6e;
   letter-spacing: -0.04em;
 }
@@ -190,28 +248,41 @@ watch(() => props.animateReady, (ready) => {
 /* ── Sub & scroll ── */
 .sub {
   position: absolute;
-  bottom: 6vh;
-  left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   font-family: 'Space Grotesk Variable', sans-serif;
-  font-size: 0.95rem;
+  font-size: 20px;
   font-weight: 400;
   color: rgba(13, 43, 94, 0.5);
   letter-spacing: 0.05em;
-  opacity: 0;
   z-index: 2;
+}
+
+.cursor {
+  opacity: 0;
+  color: rgba(13, 43, 94, 0.5);
+  text-shadow: 0 0 10px rgba(26, 86, 219, 0.65);
+  font-weight: 300;
+}
+
+.cursor--on {
+  animation: blink 1s step-end infinite;
 }
 
 .scroll-cue {
   position: absolute;
   z-index: 2;
-  bottom: 2rem;
+  bottom: 2%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.5rem;
+  font-size: 26px;
   color: rgba(13, 43, 94, 0.3);
   animation: bob 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 @keyframes bob {

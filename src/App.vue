@@ -25,26 +25,30 @@ onMounted(async () => {
   const el = logoAnchorRef.value!
   const rect = el.getBoundingClientRect()
 
-  // How far to move the logo to reach screen center
-  const dx = window.innerWidth  / 2 - (rect.left + rect.width  / 2)
-  const dy = window.innerHeight / 2 - (rect.top  + rect.height / 2)
-  const scale = 160 / rect.height   // grow from natural 52px to 160px
+  // Natural anchor is position:fixed top:17px left:20px — stable regardless of viewport size.
+  // Use these to compute dx/dy fresh on every resize instead of caching stale window dimensions.
+  const naturalCx = 20 + rect.width  / 2
+  const naturalCy = 17 + rect.height / 2
+  const logoScale = 300 / rect.height
 
-  gsap.set(el, { x: dx, y: dy, scale })
+  function centerLogo() {
+    const dx = window.innerWidth  / 2 - naturalCx
+    const dy = window.innerHeight / 2 - naturalCy
+    gsap.killTweensOf(el)
+    gsap.set(el, { x: dx, y: dy, scale: logoScale, opacity: 1 })
+    gsap.to(el, { y: dy - 16, duration: 1.5, ease: 'sine.inOut', yoyo: true, repeat: -1 })
+  }
 
-  // Bob while splash is showing
-  const bobTween = gsap.to(el, {
-    y: dy - 16,
-    duration: 1.5,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-  })
+  centerLogo()
+
+  // Re-center whenever the viewport resizes during splash (Hyprland tiling, devtools, etc.)
+  window.addEventListener('resize', centerLogo)
 
   const minWait = new Promise<void>(r => setTimeout(r, 2200))
   await Promise.all([document.fonts.ready, minWait])
 
-  bobTween.kill()
+  window.removeEventListener('resize', centerLogo)
+  gsap.killTweensOf(el)
   loaded.value = true  // tells SplashScreen bg to start fading
 
   // Fly logo back to its natural corner position
@@ -97,6 +101,7 @@ onMounted(async () => {
   top: 17px;
   left: 20px;
   z-index: 10000;  /* above splash bg (9999) so logo is always visible */
+  opacity: 0;      /* hidden until centerLogo() positions and reveals it */
 }
 
 .scroll-space {

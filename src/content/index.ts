@@ -3,7 +3,7 @@ export const hero = {
   article: 'the',
   deep: 'Deep',
   frontier: 'Frontier',
-  sub: 'built by triton, tested by the ocean.',
+  sub: 'built by triton - tested by the ocean.',
 }
 
 export const nav = {

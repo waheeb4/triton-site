@@ -11,7 +11,7 @@ Vue 3 + Vite + TypeScript. Student ROV team website.
 | Framework | Vue 3 (`<script setup>` Composition API) |
 | Build | Vite |
 | Language | TypeScript |
-| Animation | GSAP (word entrance animations) |
+| Animation | GSAP (entrance + idle animations) |
 | Smooth scroll | Lenis (`lenis/vue` — driven by GSAP ticker, `autoRaf: false`) |
 | 3D | Three.js (GLTFLoader + DRACOLoader) |
 | Fonts | Self-hosted via Fontsource (no Google Fonts CDN) |
@@ -24,7 +24,7 @@ Vue 3 + Vite + TypeScript. Student ROV team website.
 ```
 src/
   App.vue                   — root layout: radial-gradient bg, Logo (fixed top-left), NavBar, Hero, Lenis
-  main.ts                   — mounts app, imports Fontsource CSS, imports style.css
+  main.ts                   — mounts app, imports Fontsource CSS, preloads logo image, imports style.css
   style.css                 — global reset (box-sizing, margin/padding 0)
   env.d.ts                  — declares *.glb and *.png modules for Vite
 
@@ -40,7 +40,7 @@ src/
     Logo.vue                — renders triton-logo-2026.png, fixed top-left at 52px height
     ModelViewer.vue         — Three.js canvas, cursor-tracking ROV model, material recoloring
     NavBar.vue              — frosted-glass pill navbar; labels sourced from content/index.ts
-    Hero.vue                — full-viewport hero: ROV PNG center + 4 absolutely-positioned words + GSAP
+    Hero.vue                — full-viewport hero: ROV PNG center + 4 words + artboard scale system
     SplashScreen.vue        — dark overlay with rotating wave rings; fades out after fonts + 2.2s
     WaveParticles.vue       — 320-particle canvas animation (background of hero)
 ```
@@ -53,11 +53,11 @@ All UI copy lives here. Components import from this file — never hardcode labe
 
 ```ts
 export const hero = {
-  engineering: 'Engineering',   // word 1 — top left
-  article: 'the',               // word 2 — top right (italic, small)
-  deep: 'Deep',                 // word 3 — top right (large, below 'the')
-  frontier: 'Frontier',         // word 4 — bottom center
-  sub: 'built by triton, tested by the ocean.',
+  engineering: 'Charting',  // word 1 — top left
+  article: 'the',           // word 2 — top right (italic, small)
+  deep: 'Deep',             // word 3 — top right (large, below 'the')
+  frontier: 'Frontier',     // word 4 — bottom center
+  sub: 'built by triton - tested by the ocean.',
 }
 export const nav = {
   left: ['Home', 'Competition'],
@@ -69,25 +69,47 @@ NavBar derives hrefs automatically: `label.toLowerCase()` → `#home`, `#competi
 
 ---
 
-## Hero Layout
+## Hero Layout — Artboard Scale System
 
-The hero uses a large ROV PNG as the centerpiece with 4 words absolutely positioned around it — inspired by editorial magazine layouts (image breaking through typography).
+The hero uses a fixed **1920×1080px artboard** that scales uniformly to fill any viewport width. This is the core responsiveness mechanism — all positions are artboard-relative and scale as a single unit.
 
-### Word positions (hardcoded px — tuned via debug panel)
+### How it works
 
-| Word | left | top | font-size | Font | Color |
-|---|---|---|---|---|---|
-| Engineering (word 1) | 268px | 196px | 223px | Plus Jakarta Sans Variable 800 | `#172554` |
-| the (word 2) | 1608px | 161px | 106px | Cormorant Garamond italic 600 | `rgba(37,99,235,0.75)` |
-| Deep (word 3) | 1625px | 232px | 206px | DM Serif Display italic | `#1e40af` |
-| Frontier (word 4) | 625px | 786px | 369px | Plus Jakarta Sans Variable 800 | `#0c4a6e` |
+```
+.hero { width: 100vw; height: 100vh; overflow: hidden; }
 
-### ROV image
+.artboard {
+  position: absolute;
+  top: 50%; left: 50%;           ← centered in hero
+  width: 1920px; height: 1080px;
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(${scale});  ← JS-driven
+}
+```
 
-- File: `src/assets/rov-hero.png` (1921×851 RGBA, transparent background)
-- Width: `100vw` | Rotation: `-21deg`
-- Centered via `.rov-positioner` at `top: 46%; left: 50%; transform: translate(-50%, -50%)`
-- Drop shadow: `drop-shadow(0px 60px 120px rgba(0,5,40,0.65)) drop-shadow(0px 16px 40px rgba(26,86,219,0.35))`
+`scale = window.innerWidth / 1920` — recalculated on every resize via `window.addEventListener('resize', syncScale)`. Artboard is anchored to the viewport center so empty space (when viewport is taller than the scaled artboard) distributes evenly top and bottom.
+
+### ctrl — reactive layout state
+
+All positions, sizes, and ROV geometry live in one `reactive` object in `Hero.vue`. **There are no hardcoded positions in CSS** — the CSS classes only carry font-family and color.
+
+```ts
+const ctrl = reactive({
+  eng:      { x: 13.96, y: 18.15, fs: 223 },   // % of artboard, fs in artboard px
+  the_:     { x: 83.75, y: 14.91, fs: 106 },
+  deep:     { x: 84.64, y: 21.48, fs: 206 },
+  frontier: { x: 32.55, y: 72.78, fs: 369 },
+  rov:      { w: 100,   r: -21,   x: 0,  y: 0,  op: 100 },  // w = % of 1920px
+  sub:      { x: 50,    yBottom: 6, fs: 20 },   // x = left%, yBottom = bottom%
+})
+```
+
+- `x` / `y` for words: percentage of artboard width (1920) / height (1080)
+- `wordStyle()` converts: `left: (x/100)*1920 px`, `top: (y/100)*1080 px`
+- ROV `w`: percentage of 1920px → `(w/100)*1920 px`
+- Sub `x`: left%, `yBottom`: distance from artboard bottom as %, `fs`: artboard px
+
+**localStorage persistence:** `ctrl` is deep-watched and saved to `localStorage` key `triton-hero-ctrl` on every change. Values are loaded on mount. To reset to code defaults: `localStorage.removeItem('triton-hero-ctrl')` in browser console + reload.
 
 ### Z-index stacking
 
@@ -95,30 +117,100 @@ The hero uses a large ROV PNG as the centerpiece with 4 words absolutely positio
 |---|---|
 | WaveParticles | 0 |
 | Words `.word` | 1 |
+| Sub `.sub` | 2 |
 | ROV `.rov-positioner` | 5 |
 
-ROV sits in front of words — words bleed behind the image at overlap points (intentional editorial effect).
+ROV sits in front of words — intentional editorial effect.
 
 ### GSAP entrance animations (triggered by `animateReady` prop from App.vue)
 
-- Engineering: `x: -80 → 0`, power3.out, 0.9s, delay 0.05s
-- the: `x: 80 → 0`, back.out(1.3), 0.85s, delay 0.18s
-- Deep: `x: 100 → 0`, expo.out, 1.0s, delay 0.28s
-- Frontier: `y: 60 → 0`, power4.out, 0.95s, delay 0.4s
-- ROV: `scale: 0.88, y: 40 → scale: 1, y: 0`, power3.out, 1.2s, delay 0.1s
-- Sub: opacity 0→1, power2.out, 0.8s, delay 0.55s
+All four words use a **blur-in** entrance:
+```ts
+gsap.fromTo(el, { opacity: 0, y: 35, filter: 'blur(18px)' },
+               { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.05, ease: 'power3.out', delay })
+```
+
+| Element | delay |
+|---|---|
+| Engineering/Charting | 0.05s |
+| the | 0.2s |
+| Deep | 0.3s |
+| Frontier | 0.42s |
+
+ROV: `opacity: 0, scale: 1.06, blur(22px)` → `opacity: 1, scale: 1, blur(0px)`, 1.3s, power3.out, delay 0.1s.
+
+### ROV idle float wobble
+
+After ROV entrance completes, an infinite yoyo loop runs:
+```ts
+onComplete() {
+  gsap.to(rovRef.value!, { y: -14, duration: 2.8, ease: 'sine.inOut', yoyo: true, repeat: -1 })
+}
+```
+±14px amplitude, 5.6s full cycle. Feels like hovering in water.
+
+### Subtitle typing animation
+
+After 550ms delay, the `hero.sub` string is typed character by character into `typedText` ref at ~40ms per character. A 550ms pause is inserted after character 15 ("built by triton"). A CSS `step-end` blinking cursor appears and blinks indefinitely.
+
+```ts
+setTimeout(() => {
+  cursorVisible.value = true
+  let i = 0
+  function typeNext() {
+    if (i < full.length) {
+      typedText.value = full.slice(0, ++i)
+      setTimeout(typeNext, i === 15 ? 550 : 40)
+    }
+  }
+  typeNext()
+}, 550)
+```
+
+Cursor CSS: `step-end` blink at 1s, `text-shadow: 0 0 10px rgba(26,86,219,0.65)` glow.
 
 ### Debug panel
 
-`Hero.vue` contains a built-in layout debug panel. **Off by default.**
+`Hero.vue` contains a built-in layout debug panel.
 
-To activate: set `showDebug = ref(true)` in Hero.vue script.
+**To activate:** set `showDebug = ref(true)` in Hero.vue script. **Off by default.**
 
-When active:
-- All words and ROV immediately appear (skips GSAP entrance)
-- Right-side overlay with sliders + number inputs for each word (fs, x, y) and ROV (w, r, x, y)
-- Words use `ctrl` reactive state; ROV width/rotation use inline styles
-- When satisfied, screenshot the panel values, give them to Claude, and set `showDebug = ref(false)`
+When `showDebug = true`:
+- A `⚙` toggle button appears fixed bottom-right. Click to open/close the panel without refreshing.
+- Full text is shown immediately (typing animation skipped) so the sub is visible for positioning.
+- All elements set to `opacity: 1` via `gsap.set` (entrance animations skipped).
+- Right-side panel with sliders for every element:
+  - **Words**: `fs` (artboard px, 0–500), `x %` (0–100), `y %` (0–100)
+  - **ROV**: `w %` (0–100), `rot °` (±180), `x (px)` offset from center (±800), `y (px)` offset (±800), `opacity` (0–100)
+  - **SUB**: `x %` (0–100), `bottom %` (0–100), `fs (px)` (0–60)
+- All changes persist live to localStorage — no need to hand values back.
+- To reset: `localStorage.removeItem('triton-hero-ctrl')` + reload.
+
+---
+
+## Splash Screen Flow (App.vue)
+
+1. `.logo-anchor` starts at `opacity: 0` (CSS) — no flash at corner position.
+2. On mount: logo natural anchor position computed from CSS (`top: 17px, left: 20px`).
+3. `centerLogo()` — calculates `dx/dy` from current `window.innerWidth/Height`, `gsap.set` to center with `opacity: 1`, starts bob tween (`y: dy-16`, sine.inOut, yoyo, repeat: -1).
+4. `window.addEventListener('resize', centerLogo)` — re-centers immediately if Hyprland tiles the window during splash.
+5. `Promise.all([document.fonts.ready, 2200ms])` — waits for fonts + minimum splash time.
+6. Listener removed, bob killed, logo flies back to corner (`x:0, y:0, scale:1`, power3.inOut, 0.8s).
+7. `splashDone = true` → Hero's `animateReady` prop fires → entrance animations run.
+
+Logo splash size: **300px** tall (natural: 52px, `logoScale = 300 / rect.height`).
+
+### Logo preload (main.ts)
+
+Logo image is preloaded before `createApp` to avoid load delay during splash:
+```ts
+import logoUrl from './assets/triton-logo-2026.png'
+const _preloadLogo = document.createElement('link')
+_preloadLogo.rel = 'preload'
+_preloadLogo.as = 'image'
+_preloadLogo.href = logoUrl
+document.head.appendChild(_preloadLogo)
+```
 
 ---
 
@@ -163,12 +255,6 @@ watchEffect((onInvalidate) => {
 
 ## Key Implementation Details
 
-### Splash screen flow (App.vue)
-
-1. On mount: logo element measured → moved to screen center via GSAP, scaled to 160px, bobs
-2. `Promise.all([document.fonts.ready, 2200ms delay])` — waits for fonts + minimum splash time
-3. Logo flies back to corner → `splashDone = true` → Hero's `animateReady` prop fires
-
 ### GLB pipeline
 The raw SolidWorks export was 101 MB. Compressed to 463 KB with:
 ```
@@ -199,6 +285,9 @@ Stacked `radial-gradient` layers on `.page` in App.vue — blue/purple/green on 
 
 ### NavBar
 Frosted glass: `background: rgba(255,255,255,0.08)` + `backdrop-filter: blur(20px)`. Labels and hrefs are derived from `content/index.ts nav` — do not hardcode them in the component.
+
+### Units inside the artboard
+Inside the scaled artboard, **only `px` and `%` of the artboard dimensions are safe.** Do NOT use `vw`, `vh`, or `rem` for positioning or font sizes inside `.artboard` — those units reference the real viewport/root and will not scale with the artboard transform.
 
 ---
 
