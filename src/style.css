@@ -8,3 +8,11 @@ html, body, #app {
   width: 100%;
   min-height: 100vh;
 }
+
+@font-face {
+  font-family: 'Dx Wideground';
+  src: url('./assets/fonts/DxWideground-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

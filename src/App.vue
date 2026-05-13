@@ -6,6 +6,7 @@ import NavBar from './components/NavBar.vue'
 import Logo from './components/Logo.vue'
 import Hero from './components/Hero.vue'
 import SplashScreen from './components/SplashScreen.vue'
+import AboutSection from './components/AboutSection.vue'
 import uniLogoUrl from './assets/uni-logo.png'
 
 const lenisRef = ref()
@@ -93,7 +94,8 @@ onMounted(async () => {
     <NavBar />
     <Hero :animate-ready="splashDone" />
     <main>
-      <div class="scroll-space" />
+      <AboutSection />
+      <div class="below-section-space" />
     </main>
   </div>
 </template>
@@ -132,7 +134,7 @@ onMounted(async () => {
   width: auto;
 }
 
-.scroll-space {
-  height: 200vh;
+.below-section-space {
+  height: 100vh;
 }
 </style>
