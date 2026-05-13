@@ -293,12 +293,47 @@ Inside the scaled artboard, **only `px` and `%` of the artboard dimensions are s
 
 ## Color Palette
 
+### Brand colors (source of truth)
+
+| Name | Hex | Usage |
+|---|---|---|
+| Space Cadet | `#192455` | Primary dark — backgrounds, text, nav |
+| Celestial Blue | `#0F9CD8` | Primary accent — highlights, hover, ROV recolor |
+| White | `#FEFEFE` | Light surfaces, text on dark |
+
+These three are the canonical team palette. All other color values in the codebase are approximations or tints derived from these. When refactoring or adding new UI, reach for these first.
+
+### Current in-code values (to be migrated toward brand colors)
+
 | Token | Value | Usage |
 |---|---|---|
-| Dark navy | `#0d2b5e` | Primary text, nav items |
-| Triton blue | `#1a56db` | Accent, model material recolor |
-| Sky hover | `#38bdf8` | Nav item hover background |
-| Background base | `#eef2ff` | Page bg |
+| Background base | `#eef2ff` | Page background |
+| Splash dark | `#06122b` | Splash screen overlay |
+| Dark navy | `#0d2b5e` | Nav item text, sub text |
+| Deep navy | `#172554` | Hero word "Charting" |
+| Mid blue | `#1e40af` | Hero word "Deep" |
+| Ocean dark | `#0c4a6e` | Hero word "Frontier" |
+| Triton blue | `#1a56db` | Accent, ROV material recolor, cursor glow |
+| Sky blue | `#38bdf8` | Nav item hover |
+| Wave particle | `rgba(100, 160, 240, α)` | WaveParticles canvas dots |
+
+### Background gradient blobs (App.vue `.page`)
+
+| Blob | Color | Position |
+|---|---|---|
+| Soft blue | `rgba(147, 197, 253, 0.75)` | Top-left |
+| Lavender | `rgba(196, 181, 253, 0.65)` | Top-right |
+| Seafoam | `rgba(110, 231, 183, 0.45)` | Bottom-center |
+| Soft blue (mid) | `rgba(147, 197, 253, 0.4)` | Center-right |
+| Light indigo | `rgba(224, 231, 255, 0.6)` | Center |
+
+### Splash wave rings (SplashScreen.vue)
+
+| Ring | Color |
+|---|---|
+| Inner | `rgba(26, 86, 219, 0.22)` — Triton blue tint |
+| Mid | `rgba(14, 165, 233, 0.16)` — Sky tint |
+| Outer | `rgba(99, 102, 241, 0.12)` — Indigo tint |
 
 ---
 

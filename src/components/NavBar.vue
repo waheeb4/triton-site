@@ -66,18 +66,18 @@ const rightItems = nav.right.map(label => ({ label, href: `#${label.toLowerCase(
 .nav-item {
   padding: 7px 16px;
   border-radius: 5px;
-  font-family: 'Space Grotesk Variable', sans-serif;
+  font-family: 'Plus Jakarta Sans Variable', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #0d2b5e;
+  color: #192455;
   text-decoration: none;
   transition: background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 
 .nav-item:hover {
-  background: rgba(56, 189, 248, 0.2);
-  color: #0d2b5e;
+  background: rgba(15, 156, 216, 0.15);
+  color: #192455;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 4px 12px rgba(15, 156, 216, 0.3);
 }
 </style>

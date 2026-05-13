@@ -6,9 +6,11 @@ import NavBar from './components/NavBar.vue'
 import Logo from './components/Logo.vue'
 import Hero from './components/Hero.vue'
 import SplashScreen from './components/SplashScreen.vue'
+import uniLogoUrl from './assets/uni-logo.png'
 
 const lenisRef = ref()
 const logoAnchorRef = ref<HTMLElement>()
+const uniLogoRef = ref<HTMLElement>()
 const splashDone = ref(false)
 const bgGone = ref(false)
 const loaded = ref(false)
@@ -27,8 +29,8 @@ onMounted(async () => {
 
   // Natural anchor is position:fixed top:17px left:20px — stable regardless of viewport size.
   // Use these to compute dx/dy fresh on every resize instead of caching stale window dimensions.
-  const naturalCx = 20 + rect.width  / 2
-  const naturalCy = 17 + rect.height / 2
+  const naturalCx = 8 + rect.width  / 2
+  const naturalCy = 20 + rect.height / 2
   const logoScale = 300 / rect.height
 
   function centerLogo() {
@@ -58,7 +60,15 @@ onMounted(async () => {
     scale: 1,
     duration: 0.8,
     ease: 'power3.inOut',
-    onComplete: () => { splashDone.value = true },
+    onComplete: () => {
+      gsap.set(el, { clearProps: 'all' })
+      el.style.opacity = '1'
+      splashDone.value = true
+      gsap.fromTo(uniLogoRef.value!,
+        { opacity: 0, y: 10, filter: 'blur(6px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out', delay: 0.15 }
+      )
+    },
   })
 })
 </script>
@@ -75,6 +85,11 @@ onMounted(async () => {
     <div ref="logoAnchorRef" class="logo-anchor">
       <Logo />
     </div>
+
+    <div ref="uniLogoRef" class="uni-logo-anchor">
+      <img :src="uniLogoUrl" alt="University logo" class="uni-logo" />
+    </div>
+
     <NavBar />
     <Hero :animate-ready="splashDone" />
     <main>
@@ -98,10 +113,23 @@ onMounted(async () => {
 
 .logo-anchor {
   position: fixed;
-  top: 17px;
-  left: 20px;
+  top: 20px;
+  left: 8px;
   z-index: 10000;  /* above splash bg (9999) so logo is always visible */
   opacity: 0;      /* hidden until centerLogo() positions and reveals it */
+}
+
+.uni-logo-anchor {
+  position: fixed;
+  top: 23px;
+  right: 24px;
+  z-index: 10000;
+  opacity: 0;      /* hidden until splash completes */
+}
+
+.uni-logo {
+  height: 45px;
+  width: auto;
 }
 
 .scroll-space {
