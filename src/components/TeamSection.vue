@@ -6,6 +6,8 @@ import { team } from '@/content/index'
 // Doubled card array for seamless loop
 const cards = [...team, ...team]
 
+const sectionRef = ref<HTMLElement>()
+const trackRef = ref<HTMLElement>()
 const beltRef = ref<HTMLElement>()
 
 const CARD_W = 280
@@ -49,7 +51,7 @@ function onPointerUp() {
 
 onMounted(() => {
   tickerFn = (_time, deltaTime) => {
-    const dt = Math.min(deltaTime, 100)
+    const dt = Math.min(deltaTime, 33)
     const speed = BASE_SPEED + velocityBoost
     currentX -= (speed * dt) / 1000
 
@@ -61,6 +63,23 @@ onMounted(() => {
   }
 
   gsap.ticker.add(tickerFn)
+
+  // Entrance animation — animate the track element directly
+  // (filter on a parent of will-change:transform children is ignored by the compositor)
+  gsap.set(trackRef.value!, { opacity: 0, y: 32 })
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        gsap.to(trackRef.value!, {
+          opacity: 1, y: 0,
+          duration: 0.6, ease: 'power3.out',
+        })
+        observer.disconnect()
+      }
+    },
+    { threshold: 0.1 }
+  )
+  observer.observe(sectionRef.value!)
 })
 
 onUnmounted(() => {
@@ -70,8 +89,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="team-section">
+  <section ref="sectionRef" class="team-section">
     <div
+      ref="trackRef"
       class="team-track"
       @pointerdown="onPointerDown"
       @pointermove="onPointerMove"

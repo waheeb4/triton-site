@@ -93,6 +93,22 @@ onMounted(() => {
   panels.forEach((panel, i) => {
     gsap.set(panel, { rotateX: 0, opacity: i === 0 ? 1 : 0 })
   })
+
+  // Blur-in entrance on scroll into view
+  gsap.set(sectionRef.value!, { opacity: 0, y: 24, filter: 'blur(14px)' })
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        gsap.to(sectionRef.value!, {
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: 0.6, ease: 'power3.out',
+        })
+        observer.disconnect()
+      }
+    },
+    { threshold: 0.1 }
+  )
+  observer.observe(sectionRef.value!)
 })
 </script>
 
@@ -202,12 +218,15 @@ onMounted(() => {
 
 .card-title {
   font-family: 'Dx Wideground', sans-serif;
-  font-size: 18px;
+  font-size: clamp(26px, 3.5vw, 52px);
   font-weight: 400;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.08em;
   color: #0f9cd8;
   text-transform: uppercase;
   margin-bottom: 24px;
+  line-height: 1.05;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .card-body {
