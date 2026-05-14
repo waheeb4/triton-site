@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from 'vue'
+import { ref, onMounted, watchEffect, watch } from 'vue'
 import gsap from 'gsap'
 import { VueLenis } from 'lenis/vue'
 import NavBar from './components/NavBar.vue'
@@ -7,6 +7,7 @@ import Logo from './components/Logo.vue'
 import Hero from './components/Hero.vue'
 import SplashScreen from './components/SplashScreen.vue'
 import AboutSection from './components/AboutSection.vue'
+import TeamSection from './components/TeamSection.vue'
 import uniLogoUrl from './assets/uni-logo.png'
 
 const lenisRef = ref()
@@ -18,9 +19,11 @@ const loaded = ref(false)
 
 watchEffect((onInvalidate) => {
   if (!lenisRef.value?.lenis) return
-  function tick(time: number) { lenisRef.value.lenis.raf(time * 1000) }
+  const lenis = lenisRef.value.lenis
+  function tick(time: number) { lenis.raf(time * 1000) }
   gsap.ticker.add(tick)
   gsap.ticker.lagSmoothing(0)
+  lenis.stop()  // locked until splash completes
   onInvalidate(() => gsap.ticker.remove(tick))
 })
 
@@ -65,6 +68,7 @@ onMounted(async () => {
       gsap.set(el, { clearProps: 'all' })
       el.style.opacity = '1'
       splashDone.value = true
+      lenisRef.value?.lenis?.start()
       gsap.fromTo(uniLogoRef.value!,
         { opacity: 0, y: 10, filter: 'blur(6px)' },
         { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out', delay: 0.15 }
@@ -95,6 +99,7 @@ onMounted(async () => {
     <Hero :animate-ready="splashDone" />
     <main>
       <AboutSection />
+      <TeamSection />
       <div class="below-section-space" />
     </main>
   </div>
