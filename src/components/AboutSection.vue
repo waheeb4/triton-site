@@ -221,7 +221,7 @@ onMounted(() => {
 
 .card-title {
   font-family: 'Dx Wideground', sans-serif;
-  font-size: clamp(32px, 4.2vw, 64px);
+  font-size: clamp(38px, 5vw, 76px);
   font-weight: 400;
   letter-spacing: 0.08em;
   color: #0f9cd8;
@@ -234,7 +234,7 @@ onMounted(() => {
 
 .card-body {
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 400;
   color: #192455;
   line-height: 1.7;
@@ -303,13 +303,14 @@ onMounted(() => {
 }
 
 .zone-chevron {
-  width: 18px;
-  height: 18px;
-  color: rgba(255, 255, 255, 0);
+  width: 34px;
+  height: 34px;
+  color: rgba(255, 255, 255, 0.5);
   transition: color 0.25s ease;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
 }
 
 .nav-zone:hover .zone-chevron {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.9);
 }
 </style>

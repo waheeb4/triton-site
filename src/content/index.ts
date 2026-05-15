@@ -14,7 +14,7 @@ export const nav = {
 export const about = [
   {
     title: 'Who We Are',
-    body: 'Founded in 2024 at the Arab Academy for Science, Technology & Maritime Transport (AASTMT), Team Triton is a student-led engineering team competing in the MATE ROV International Competition. We combine mechanical, electrical, software and non-technical talent to design ROVs that tackle real-world underwater challenges. Every member brings a different discipline to the table united by a shared drive to build something that works under pressure, literally and figuratively.',
+    body: 'Founded in 2024 at the Arab Academy for Science, Technology & Maritime Transport (AASTMT), Triton is a student-led engineering team competing in the MATE ROV International Competition. We combine mechanical, electrical, software and non-technical talent to design ROVs that tackle real-world underwater challenges. Every member brings a different discipline to the table united by a shared drive to build something that works under pressure, literally and figuratively.',
   },
   {
     title: 'The Competition',
