@@ -41,7 +41,7 @@ export const achievements = {
     },
     {
       label: 'MATE 2025',
-      awards: '1st Place AAST · Best Engineering Presentation · Regional Champions',
+      awards: '1st Place AAST · Best Engineering Presentation',
       sub: null,
       breakthrough: '4th Place International Competition, USA · Highest Ranked Egyptian Team',
     },
