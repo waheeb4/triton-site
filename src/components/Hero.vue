@@ -24,7 +24,7 @@ const ctrl = reactive({
   the_:     { x: 83.75, y: 14.91, fs: 106 },
   deep:     { x: 84.64, y: 21.48, fs: 206 },
   frontier: { x: 32.55, y: 72.78, fs: 369 },
-  rov:      { w: 100,   r: -21,   x: 0,   y: 0,  op: 100 },
+  rov:      { w: 65,    r: -21,   x: 0,   y: 0,  op: 100 },
   sub:      { x: 50,   yBottom: 6, fs: 20 },
 })
 // x/y are % of artboard (1920×1080); fs stays in artboard px
