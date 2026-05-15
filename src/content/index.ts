@@ -30,6 +30,34 @@ export const about = [
   },
 ]
 
+export const achievements = {
+  title: 'Achievements',
+  years: [
+    {
+      label: 'MATE 2026',
+      awards: '1st Place AAST · Best ROV Design · Best Technical Report · Best Engineering Presentation · Best Team Spirit',
+      sub: 'Regional Champions — Advancing to International Competition, Canada',
+      breakthrough: null,
+    },
+    {
+      label: 'MATE 2025',
+      awards: '1st Place AAST · Best Engineering Presentation · Regional Champions',
+      sub: null,
+      breakthrough: '4th Place International Competition, USA · Highest Ranked Egyptian Team',
+    },
+  ],
+}
+
+export const contact = {
+  mapSrc: 'https://maps.google.com/maps?q=31.3091015,30.0640276&z=16&output=embed',
+  address: 'Arab Academy for Science, Technology & Maritime Transport, Abu Qir Campus, Alexandria, Egypt',
+  socials: [
+    { name: 'Facebook',  url: 'https://www.facebook.com/triton.rov' },
+    { name: 'Instagram', url: 'https://www.instagram.com/triton.rov?igsh=MXUxMW05eXB6b2Jwdg==' },
+    { name: 'LinkedIn',  url: 'https://www.linkedin.com/company/triton-rov/' },
+  ],
+}
+
 export const team: { photo: string; firstName: string; lastName: string; role: string }[] = [
   // C-Suite
   { photo: 'mohamed-ehab.jpeg',   firstName: 'Mohamed',      lastName: 'Ehab',        role: 'CEO' },

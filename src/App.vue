@@ -8,6 +8,8 @@ import Hero from './components/Hero.vue'
 import SplashScreen from './components/SplashScreen.vue'
 import AboutSection from './components/AboutSection.vue'
 import TeamSection from './components/TeamSection.vue'
+import AchievementsSection from './components/AchievementsSection.vue'
+import ContactSection from './components/ContactSection.vue'
 import uniLogoUrl from './assets/uni-logo.png'
 
 const lenisRef = ref()
@@ -100,7 +102,8 @@ onMounted(async () => {
     <main>
       <AboutSection />
       <TeamSection />
-      <div class="below-section-space" />
+      <AchievementsSection />
+      <ContactSection />
     </main>
   </div>
 </template>
@@ -137,9 +140,5 @@ onMounted(async () => {
 .uni-logo {
   height: 45px;
   width: auto;
-}
-
-.below-section-space {
-  height: 100vh;
 }
 </style>
