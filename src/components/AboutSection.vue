@@ -4,7 +4,7 @@ import type { ComponentPublicInstance } from 'vue'
 import gsap from 'gsap'
 import { about } from '@/content/index'
 import card1Url from '@/assets/team-intro.jpg'
-import card2Url from '@/assets/test.png'
+import card2Url from '@/assets/test.jpg'
 import card3Url from '@/assets/rov.jpeg'
 import card4Url from '@/assets/team.jpeg'
 
