@@ -3,13 +3,16 @@ import { ref, computed, onMounted } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import gsap from 'gsap'
 import { about } from '@/content/index'
-import teamUrl from '@/assets/team.jpeg'
+import card1Url from '@/assets/team-intro.jpg'
+import card2Url from '@/assets/test.png'
+import card3Url from '@/assets/rov.jpeg'
+import card4Url from '@/assets/team.jpeg'
 
 const sectionRef = ref<HTMLElement>()
 const cardRefs = ref<HTMLElement[]>([])
 const panelRefs = ref<HTMLElement[]>([])
 
-const cardImages: (string | null)[] = [teamUrl, ...Array(about.length - 1).fill(null)]
+const cardImages: (string | null)[] = [card1Url, card2Url, card3Url, card4Url]
 const placeholderGradients = [
   '',
   'linear-gradient(135deg, #192455 0%, #0F9CD8 100%)',
@@ -218,7 +221,7 @@ onMounted(() => {
 
 .card-title {
   font-family: 'Dx Wideground', sans-serif;
-  font-size: clamp(26px, 3.5vw, 52px);
+  font-size: clamp(32px, 4.2vw, 64px);
   font-weight: 400;
   letter-spacing: 0.08em;
   color: #0f9cd8;
@@ -231,7 +234,7 @@ onMounted(() => {
 
 .card-body {
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
-  font-size: 21px;
+  font-size: 24px;
   font-weight: 400;
   color: #192455;
   line-height: 1.7;
