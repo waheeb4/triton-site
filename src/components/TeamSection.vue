@@ -11,7 +11,7 @@ const trackRef = ref<HTMLElement>()
 const beltRef = ref<HTMLElement>()
 
 const CARD_W = 280
-const GAP = 28
+const GAP = 24
 const CARD_STRIDE = CARD_W + GAP          // 308px per slot
 const TOTAL_W = CARD_STRIDE * team.length // width of one full set
 
