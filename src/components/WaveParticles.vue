@@ -41,7 +41,7 @@ function draw(ctx: CanvasRenderingContext2D) {
 
 let last = 0
 function loop(now: number) {
-  t += (now - last) * 0.001
+  t += Math.min(now - last, 33) * 0.001
   last = now
   const canvas = canvasRef.value
   if (canvas) {

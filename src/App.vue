@@ -33,7 +33,7 @@ onMounted(async () => {
   const el = logoAnchorRef.value!
   const rect = el.getBoundingClientRect()
 
-  // Natural anchor is position:fixed top:17px left:20px — stable regardless of viewport size.
+  // Natural anchor is position:fixed top:20px left:8px — stable regardless of viewport size.
   // Use these to compute dx/dy fresh on every resize instead of caching stale window dimensions.
   const naturalCx = 8 + rect.width  / 2
   const naturalCy = 20 + rect.height / 2

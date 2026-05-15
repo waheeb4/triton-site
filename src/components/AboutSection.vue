@@ -33,7 +33,6 @@ const fanOffsets = [
   { x: -6,  y: 9,  rotation: -2.5 },
   { x: 8,   y: 16, rotation: 4.0  },
   { x: -3,  y: 24, rotation: -1.5 },
-  { x: 10,  y: 32, rotation: 5.5  },
 ]
 
 const currentIndex = ref(0)
@@ -101,7 +100,7 @@ onMounted(() => {
   gsap.set(sectionRef.value!, { opacity: 0, y: 24, filter: 'blur(14px)' })
   const observer = new IntersectionObserver(
     (entries) => {
-      if (entries[0].isIntersecting) {
+      if (entries[0]?.isIntersecting) {
         gsap.to(sectionRef.value!, {
           opacity: 1, y: 0, filter: 'blur(0px)',
           duration: 0.6, ease: 'power3.out',
@@ -234,7 +233,7 @@ onMounted(() => {
 
 .card-body {
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
-  font-size: 27px;
+  font-size: clamp(15px, 1.8vw, 27px);
   font-weight: 400;
   color: #192455;
   line-height: 1.7;

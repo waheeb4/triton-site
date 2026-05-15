@@ -50,7 +50,9 @@ function onPointerUp() {
 }
 
 onMounted(() => {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   tickerFn = (_time, deltaTime) => {
+    if (reducedMotion) return
     const dt = Math.min(deltaTime, 33)
     const speed = BASE_SPEED + velocityBoost
     currentX -= (speed * dt) / 1000
@@ -69,7 +71,7 @@ onMounted(() => {
   gsap.set(trackRef.value!, { opacity: 0, y: 32 })
   const observer = new IntersectionObserver(
     (entries) => {
-      if (entries[0].isIntersecting) {
+      if (entries[0]?.isIntersecting) {
         gsap.to(trackRef.value!, {
           opacity: 1, y: 0,
           duration: 0.6, ease: 'power3.out',
@@ -109,6 +111,8 @@ onUnmounted(() => {
               :src="`/team/${member.photo}`"
               :alt="`${member.firstName} ${member.lastName}`"
               :draggable="false"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           <div class="card-info">

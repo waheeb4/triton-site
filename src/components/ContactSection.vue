@@ -11,7 +11,7 @@ onMounted(() => {
   gsap.set(bodyRef.value!, { opacity: 0, y: 16, filter: 'blur(10px)' })
   const observer = new IntersectionObserver(
     (entries) => {
-      if (entries[0].isIntersecting) {
+      if (entries[0]?.isIntersecting) {
         gsap.to(bodyRef.value!, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out' })
         observer.disconnect()
       }

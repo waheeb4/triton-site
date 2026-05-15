@@ -28,7 +28,7 @@ onMounted(() => {
   let maxDim = 1
 
   const dracoLoader = new DRACOLoader()
-  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
+  dracoLoader.setDecoderPath('/draco/')
 
   const loader = new GLTFLoader()
   loader.setDRACOLoader(dracoLoader)
@@ -62,6 +62,8 @@ onMounted(() => {
     })
 
     scene.add(model)
+  }, undefined, (err) => {
+    console.error('[ModelViewer] failed to load GLB:', err)
   })
 
   let targetRotX = 0, targetRotY = 0
@@ -102,6 +104,14 @@ onMounted(() => {
     cancelAnimationFrame(rafId)
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('resize', onResize)
+    scene.traverse((obj) => {
+      if ((obj as THREE.Mesh).isMesh) {
+        const mesh = obj as THREE.Mesh
+        mesh.geometry.dispose()
+        const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+        mats.forEach((m) => m.dispose())
+      }
+    })
     renderer.dispose()
   }
 })

@@ -28,7 +28,7 @@ onMounted(() => {
   gsap.set(contentRef.value!, { opacity: 0, y: 24, filter: 'blur(14px)' })
   const observer = new IntersectionObserver(
     (entries) => {
-      if (entries[0].isIntersecting) {
+      if (entries[0]?.isIntersecting) {
         gsap.to(contentRef.value!, {
           opacity: 1, y: 0, filter: 'blur(0px)',
           duration: 0.7, ease: 'power3.out',
@@ -215,6 +215,13 @@ onMounted(() => {
   opacity: 0.5;
   font-style: italic;
   margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-belt--up,
+  .photo-belt--down {
+    animation-play-state: paused;
+  }
 }
 
 .achievements-breakthrough {

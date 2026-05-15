@@ -15,6 +15,7 @@ const rovRef      = ref<HTMLElement>()
 const subRef      = ref<HTMLElement>()
 const typedText    = ref('')
 const cursorVisible = ref(false)
+const typingTimeouts: ReturnType<typeof setTimeout>[] = []
 
 // ── Debug panel (off by default — set showDebug = true to re-enable) ──
 const showDebug  = ref(false)
@@ -60,6 +61,7 @@ watch(ctrl, (val) => {
 }, { deep: true })
 onUnmounted(() => {
   window.removeEventListener('resize', syncScale)
+  typingTimeouts.forEach(clearTimeout)
 })
 
 function animate() {
@@ -75,18 +77,18 @@ function animate() {
       gsap.to(rovRef.value!, { y: -14, duration: 2.8, ease: 'sine.inOut', yoyo: true, repeat: -1 })
     },
   })
-  setTimeout(() => {
+  typingTimeouts.push(setTimeout(() => {
     const full = hero.sub
     cursorVisible.value = true
     let i = 0
     function typeNext() {
       if (i < full.length) {
         typedText.value = full.slice(0, ++i)
-        setTimeout(typeNext, i === 15 ? 550 : 40)
+        typingTimeouts.push(setTimeout(typeNext, i === 15 ? 550 : 40))
       }
     }
     typeNext()
-  }, 550)
+  }, 550))
 }
 
 watch(() => props.animateReady, (ready) => {
