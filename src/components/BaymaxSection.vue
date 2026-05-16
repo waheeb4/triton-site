@@ -14,9 +14,8 @@ let duration = 0
 let scrollHandler: () => void
 
 onMounted(() => {
-  // initialise panels hidden
   panelRefs.value.forEach(el => {
-    if (el) gsap.set(el, { opacity: 0, x: 18 })
+    if (el) gsap.set(el, { opacity: 0, y: 10 })
   })
 
   videoElRef.value!.addEventListener('loadedmetadata', () => {
@@ -25,9 +24,9 @@ onMounted(() => {
 
   scrollHandler = () => {
     if (!duration || !sectionRef.value) return
-    const rect      = sectionRef.value.getBoundingClientRect()
+    const rect       = sectionRef.value.getBoundingClientRect()
     const scrollable = sectionRef.value.offsetHeight - window.innerHeight
-    const scrolled  = Math.max(0, Math.min(scrollable, -rect.top))
+    const scrolled   = Math.max(0, Math.min(scrollable, -rect.top))
     const t = (scrolled / scrollable) * duration
 
     videoElRef.value!.currentTime = t
@@ -36,7 +35,7 @@ onMounted(() => {
       const el = panelRefs.value[i]
       if (!el) return
       const active = t >= panel.start && t <= panel.end
-      gsap.to(el, { opacity: active ? 1 : 0, x: active ? 0 : 18, duration: 0.35, ease: 'power2.out', overwrite: 'auto' })
+      gsap.to(el, { opacity: active ? 1 : 0, y: active ? 0 : 10, duration: 0.35, ease: 'power2.out', overwrite: 'auto' })
     })
   }
 
@@ -49,19 +48,17 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
 <template>
   <section ref="sectionRef" class="baymax-section">
     <div class="sticky-frame">
+      <div class="inner">
 
-      <!-- Left: video bleeds off the left edge -->
-      <div class="left-col">
+        <!-- Left: video -->
         <div class="video-wrap">
           <video ref="videoElRef" muted playsinline preload="metadata">
             <source :src="rovVideoUrl" type="video/webm" />
           </video>
         </div>
-      </div>
 
-      <!-- Right: title + scroll-driven panels -->
-      <div class="right-col">
-        <div class="right-content">
+        <!-- Right: title + subtitle + panels -->
+        <div class="text-col">
           <h2 class="baymax-title">{{ title }}</h2>
           <p  class="baymax-sub">{{ sub }}</p>
 
@@ -77,8 +74,8 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </section>
 </template>
@@ -97,38 +94,39 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   height: 100vh;
   display: flex;
   align-items: center;
-  overflow: hidden;
+  justify-content: center;
 }
 
-/* ── Left column ─────────────────────────────── */
-.left-col {
-  flex: 0 0 58%;
-  height: 100%;
+/* centered block — gaps on both sides */
+.inner {
+  width: 90%;
   display: flex;
   align-items: center;
-  /* bleed video off the left edge */
-  margin-left: -5vw;
+  gap: 4%;
 }
 
+/* ── Video ── height-driven so it fills the viewport */
 .video-wrap {
-  width: 100%;
+  flex: 0 0 auto;
+  height: 72vh;
+  aspect-ratio: 16 / 9;
+  border: 1.5px solid rgba(15, 156, 216, 0.45);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 32px rgba(15, 156, 216, 0.12), 0 8px 40px rgba(25, 36, 85, 0.1);
 }
 
 .video-wrap video {
   width: 100%;
-  display: block;
-}
-
-/* ── Right column ────────────────────────────── */
-.right-col {
-  flex: 0 0 42%;
   height: 100%;
-  display: flex;
-  align-items: center;
+  display: block;
+  object-fit: cover;
 }
 
-.right-content {
-  padding-left: 2vw;
+/* ── Text column ── */
+.text-col {
+  flex: 1;
+  min-width: 0;
 }
 
 .baymax-title {
@@ -139,7 +137,7 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   color: #0F9CD8;
   text-transform: uppercase;
   line-height: 1.0;
-  margin: 0 0 14px;
+  margin: 0 0 12px;
 }
 
 .baymax-sub {
@@ -148,16 +146,16 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #0F9CD8;
-  margin: 0 0 48px;
+  color: #192455;
+  margin: 0 0 40px;
 }
 
-/* ── Panels ──────────────────────────────────── */
+/* ── Panels ── */
 .panels-area {
   position: relative;
+  min-height: 120px;
 }
 
-/* all panels stack in the same spot; only one is visible at a time */
 .panel {
   position: absolute;
   top: 0;
@@ -172,7 +170,7 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #0F9CD8;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
 .panel-desc {
@@ -181,7 +179,7 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   font-weight: 400;
   color: #192455;
   line-height: 1.8;
-  max-width: 380px;
+  max-width: 400px;
   margin: 0;
 }
 </style>
