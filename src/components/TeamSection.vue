@@ -159,8 +159,8 @@ onUnmounted(() => {
   .team-section { padding: 24px 0; }
   .team-track { height: 300px; }
   .team-card { width: 200px; height: 280px; }
-  .card-last-name { font-size: 20px; }
-  .card-first-name { font-size: 12px; }
+  .card-first-name { font-size: 20px; }
+  .card-last-name { font-size: 12px; }
   .card-role { font-size: 12px; margin-top: 2px; }
 }
 
@@ -217,6 +217,15 @@ onUnmounted(() => {
 
 .card-first-name {
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #192455;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.card-last-name {
+  font-family: 'Plus Jakarta Sans Variable', sans-serif;
   font-size: 15px;
   font-weight: 600;
   color: rgba(25, 36, 85, 0.65);
@@ -224,15 +233,6 @@ onUnmounted(() => {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-}
-
-.card-last-name {
-  font-family: 'Plus Jakarta Sans Variable', sans-serif;
-  font-size: 26px;
-  font-weight: 800;
-  color: #192455;
-  line-height: 1.15;
-  margin: 0;
 }
 
 .card-role {

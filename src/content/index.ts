@@ -74,7 +74,7 @@ export const baymax = {
 export const team: { photo: string; firstName: string; lastName: string; role: string }[] = [
   // C-Suite
   { photo: 'mohamed-ehab.jpeg',   firstName: 'Mohamed',      lastName: 'Ehab',        role: 'CEO' },
-  { photo: 'yehia-moh.jpeg',      firstName: 'Yehia',        lastName: 'Mohamed',     role: 'COO' },
+  { photo: 'yehia-moh.jpeg',      firstName: 'Yahia',        lastName: 'Mohamed',     role: 'COO' },
   { photo: 'aboya.jpeg',          firstName: 'Mohamed',      lastName: 'Osama',       role: 'CTO' },
   { photo: 'ali-elouny.jpeg',     firstName: 'Ali',          lastName: 'Elouny',      role: 'CFO' },
   
@@ -96,7 +96,7 @@ export const team: { photo: string; firstName: string; lastName: string; role: s
   { photo: 'salma-sherif.jpeg',   firstName: 'Salma',        lastName: 'Sherif',      role: 'Float Lead' },
   { photo: 'marwan.jpeg',         firstName: 'Marwan',       lastName: 'Mahmoud',     role: 'Software Member' },
   { photo: 'marawan-gui.jpeg',    firstName: 'Marwan',       lastName: 'Hossam',      role: 'Software Member' },
-  { photo: 'gamal.jpeg',          firstName: 'Gamal',        lastName: 'Marangoz',  role: 'Software Member' },
+  { photo: 'gamal.jpeg',          firstName: 'Gamal',        lastName: 'ElMarangoz',  role: 'Software Member' },
   { photo: 'sheifo-jr.jpeg',      firstName: 'Mohamed',      lastName: 'Tawfik',      role: 'Software Member' },
   { photo: 'jana ayman.jpeg',     firstName: 'Jana',         lastName: 'Ayman',       role: 'Software Member' },
   { photo: 'aya yasser.jpeg',     firstName: 'Aya',          lastName: 'Yasser',      role: 'Software Member' },
@@ -108,10 +108,10 @@ export const team: { photo: string; firstName: string; lastName: string; role: s
   { photo: 'kenzy.jpeg',          firstName: 'Kenzy',        lastName: 'Baher',       role: 'Software Member' },
   
   // Electrical — Lead then group
-  { photo: 'zeyad-magdy.jpeg',    firstName: 'Zeyad',        lastName: 'Magdy',       role: 'Electrical Lead' },
+  { photo: 'zeyad-magdy.jpeg',    firstName: 'Ziad',        lastName: 'Magdy',       role: 'Electrical Lead' },
   { photo: 'seiffox.jpeg',        firstName: 'Seifeldeen',   lastName: 'Walid',       role: 'Electrical Member' },
   { photo: 'sheifo.jpeg',         firstName: 'Mohamed',      lastName: 'Sherif',      role: 'Electrical Member' },
-  { photo: 'seif-walid.jpeg',     firstName: 'Seif',         lastName: 'Walid',       role: 'Electrical Member' },
+  { photo: 'seif-walid.jpeg',     firstName: 'Seif',         lastName: 'Alaa',       role: 'Electrical Member' },
   { photo: 'mariam.jpeg',         firstName: 'Mariam',       lastName: 'Mohamed',     role: 'Electrical Member' },
   { photo: 'sama abdelhady.jpeg', firstName: 'Sama',         lastName: 'Abdelhady',   role: 'Non-Technical Member' },
   { photo: 'salma abdelsattar.jpeg', firstName: 'Salma',     lastName: 'Abdelsattar', role: 'Non-Technical Member' },
