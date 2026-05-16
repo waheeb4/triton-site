@@ -62,7 +62,7 @@ export const contact = {
 }
 
 export const baymax = {
-  title: 'BAYMAX',
+  title: 'SHADOW WING',
   sub: 'BEAST BEHIND IT ALL',
   panels: [
     { id: 'gripper', label: 'GRIPPER SYSTEM',  start: 4,  end: 8,  desc: 'Dual-claw gripper with servo-driven actuation, left gripper has the ability to rotate 360 degrees and right griper can be opened in an extreme wide angle, designed for precise object manipulation at depth.' },
