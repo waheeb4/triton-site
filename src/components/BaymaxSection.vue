@@ -202,4 +202,36 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   max-width: 400px;
   margin: 0;
 }
+
+@media (max-width: 768px) {
+  .baymax-section {
+    height: 220vh;
+    margin-top: 48px;
+  }
+
+  .inner {
+    flex-direction: column;
+    width: 92%;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .video-col {
+    flex: none;
+    width: 100%;
+  }
+
+  .text-col {
+    width: 100%;
+  }
+
+  .baymax-title {
+    font-size: clamp(32px, 9vw, 54px);
+  }
+
+  .panel-desc {
+    max-width: 100%;
+    font-size: clamp(13px, 3.8vw, 18px);
+  }
+}
 </style>

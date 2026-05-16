@@ -154,12 +154,18 @@ onMounted(async () => {
   opacity: 0;      /* hidden until splash completes */
 }
 
-@media (max-width: 768px) {
-  .uni-logo-anchor { display: none; }
-}
-
 .uni-logo {
   height: 45px;
   width: auto;
+}
+
+@media (max-width: 768px) {
+  .uni-logo-anchor {
+    top: 14px;
+    right: 14px;
+  }
+  .uni-logo {
+    height: 30px;
+  }
 }
 </style>

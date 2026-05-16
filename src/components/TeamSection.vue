@@ -156,8 +156,12 @@ onUnmounted(() => {
 }
 
 @media (max-width: 768px) {
-  .team-section { padding: 48px 0; }
-  .team-track { height: 360px; }
+  .team-section { padding: 24px 0; }
+  .team-track { height: 300px; }
+  .team-card { width: 200px; height: 280px; }
+  .card-last-name { font-size: 20px; }
+  .card-first-name { font-size: 12px; }
+  .card-role { font-size: 12px; margin-top: 2px; }
 }
 
 .team-track:active {

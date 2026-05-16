@@ -234,38 +234,38 @@ onMounted(() => {
   .about-section {
     flex-direction: column;
     height: auto;
-    min-height: 100vh;
+    min-height: unset;
     overflow: visible;
-    padding-bottom: 48px;
+    padding-bottom: 32px;
   }
 
   .text-col {
     width: 100%;
-    padding: 80px 6% 24px;
+    padding: 48px 6% 16px;
     height: auto;
     order: 2;
   }
 
   .card-col {
     width: 100%;
-    height: 52vw;
-    min-height: 240px;
+    height: 44vw;
+    min-height: 180px;
     order: 1;
-    padding-top: 80px;
+    padding-top: 48px;
   }
 
   .card-stack {
-    width: 82vw;
+    width: 72vw;
     height: 100%;
   }
 
   .card-title {
     white-space: normal;
-    font-size: clamp(28px, 8vw, 48px);
+    font-size: clamp(24px, 7vw, 40px);
   }
 
   .card-body {
-    font-size: clamp(14px, 3.8vw, 18px);
+    font-size: clamp(13px, 3.5vw, 17px);
   }
 }
 
