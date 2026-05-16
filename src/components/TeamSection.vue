@@ -68,6 +68,7 @@ onMounted(() => {
     }
 
     if (currentX < -TOTAL_W) currentX += TOTAL_W
+    if (currentX > 0) currentX -= TOTAL_W
     beltRef.value!.style.transform = `translateX(${currentX}px)`
   }
 
