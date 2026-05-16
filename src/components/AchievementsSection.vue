@@ -134,10 +134,12 @@ onMounted(() => {
 
 .photo-belt--up {
   animation: scroll-up 38s linear infinite;
+  will-change: transform;
 }
 
 .photo-belt--down {
   animation: scroll-down 32s linear infinite;
+  will-change: transform;
 }
 
 /* ─── Individual photo cards ────────────────────────── */

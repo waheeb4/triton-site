@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref, reactive, onMounted, onUnmounted } from 'vue'
+import { watch, ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import gsap from 'gsap'
 import { hero } from '../content/index'
 import WaveParticles from './WaveParticles.vue'
@@ -91,15 +91,16 @@ function animate() {
   }, 550))
 }
 
-watch(() => props.animateReady, (ready) => {
+watch(() => props.animateReady, async (ready) => {
   if (!ready) return
+  await nextTick()
   if (showDebug.value) {
     [engRef.value, theRef.value, deepRef.value, frontierRef.value, rovRef.value, subRef.value]
       .forEach(el => el && gsap.set(el, { opacity: 1 }))
     return
   }
   animate()
-})
+}, { immediate: true })
 </script>
 
 <template>

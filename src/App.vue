@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect, watch } from 'vue'
+import { ref, onMounted, watchEffect, watch, computed } from 'vue'
 import gsap from 'gsap'
 import { VueLenis } from 'lenis/vue'
 import NavBar from './components/NavBar.vue'
@@ -10,6 +10,7 @@ import AboutSection from './components/AboutSection.vue'
 import TeamSection from './components/TeamSection.vue'
 import AchievementsSection from './components/AchievementsSection.vue'
 import ContactSection from './components/ContactSection.vue'
+import DocsPage from './components/DocsPage.vue'
 import uniLogoUrl from './assets/uni-logo.png'
 
 const lenisRef = ref()
@@ -18,6 +19,10 @@ const uniLogoRef = ref<HTMLElement>()
 const splashDone = ref(false)
 const bgGone = ref(false)
 const loaded = ref(false)
+
+const currentHash = ref(window.location.hash)
+window.addEventListener('hashchange', () => { currentHash.value = window.location.hash })
+const showDocs = computed(() => currentHash.value === '#docs')
 
 watchEffect((onInvalidate) => {
   if (!lenisRef.value?.lenis) return
@@ -98,13 +103,20 @@ onMounted(async () => {
     </div>
 
     <NavBar />
-    <Hero :animate-ready="splashDone" />
-    <main>
-      <AboutSection />
-      <TeamSection />
-      <AchievementsSection />
-      <ContactSection />
-    </main>
+
+    <template v-if="showDocs">
+      <DocsPage />
+    </template>
+
+    <template v-else>
+      <Hero :animate-ready="splashDone" />
+      <main>
+        <AboutSection />
+        <TeamSection />
+        <AchievementsSection />
+        <ContactSection />
+      </main>
+    </template>
   </div>
 </template>
 

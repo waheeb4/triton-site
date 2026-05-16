@@ -48,6 +48,13 @@ export const achievements = {
   ],
 }
 
+export const docs = {
+  tag: 'Open Source',
+  heading: 'Our code is brewing.',
+  body: "We're documenting our open-source software behind Baymax — our ROV's control stack, vision pipeline, and onboard GUI. It's not ready yet, but it's coming. Stay tuned, and check back once in a while.",
+  back: '← Back to home',
+}
+
 export const contact = {
   mapSrc: 'https://maps.google.com/maps?q=31.3091015,30.0640276&z=16&output=embed',
   address: 'Arab Academy for Science, Technology & Maritime Transport, Abu Qir Campus, Alexandria, Egypt',
