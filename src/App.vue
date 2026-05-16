@@ -58,7 +58,7 @@ onMounted(async () => {
   // Re-center whenever the viewport resizes during splash (Hyprland tiling, devtools, etc.)
   window.addEventListener('resize', centerLogo)
 
-  const minWait = new Promise<void>(r => setTimeout(r, 2200))
+  const minWait = new Promise<void>(r => setTimeout(r, 5000))
   await Promise.all([document.fonts.ready, minWait])
 
   window.removeEventListener('resize', centerLogo)

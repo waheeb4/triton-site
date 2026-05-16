@@ -5,14 +5,13 @@ import gsap from 'gsap'
 import { about } from '@/content/index'
 import card1Url from '@/assets/team-intro.jpg'
 import card2Url from '@/assets/test.jpg'
-import card3Url from '@/assets/rov.jpeg'
 import card4Url from '@/assets/team.jpeg'
 
 const sectionRef = ref<HTMLElement>()
 const cardRefs = ref<HTMLElement[]>([])
 const panelRefs = ref<HTMLElement[]>([])
 
-const cardImages: (string | null)[] = [card1Url, card2Url, card3Url, card4Url]
+const cardImages: (string | null)[] = [card1Url, card2Url, card4Url]
 const placeholderGradients = [
   '',
   'linear-gradient(135deg, #192455 0%, #0F9CD8 100%)',

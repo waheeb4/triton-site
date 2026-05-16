@@ -21,10 +21,6 @@ export const about = [
     body: 'MATE ROV Competition is one of the most rigorous student engineering challenges in the world. Teams design, build, and pilot remotely operated vehicles to complete real underwater mission tasks modelled on the work of professional ocean engineers. We compete at the international level, measured not just on technical performance but on documentation, presentation, and professional standards.',
   },
   {
-    title: 'Our ROV',
-    body: "Baymax is our team's competition ROV engineered from the ground up by our students. Baymax integrates custom thruster mounts, precision gripper assemblies, and a full onboard electronics stack. Every subsystem was designed, tested, and iterated by the team, no off-the-shelf frames, no shortcuts.",
-  },
-  {
     title: 'How We Work',
     body: "Our team runs as four interconnected divisions: Mechanical, Electrical, Software, and Non-Technical. Each division owns its domain end-to-end from design and fabrication to testing and documentation. We operate on a real project cycle: scoped deliverables, integration reviews, and a shared deadline with a competition to win on the calendar.",
   },
