@@ -219,7 +219,7 @@ onMounted(() => {
 
 .card-title {
   font-family: 'Dx Wideground', sans-serif;
-  font-size: clamp(38px, 5vw, 76px);
+  font-size: clamp(30px, 3.8vw, 60px);
   font-weight: 400;
   letter-spacing: 0.08em;
   color: #0f9cd8;
@@ -271,7 +271,7 @@ onMounted(() => {
 
 .card-body {
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
-  font-size: clamp(15px, 1.8vw, 27px);
+  font-size: clamp(13px, 1.4vw, 20px);
   font-weight: 400;
   color: #192455;
   line-height: 1.7;

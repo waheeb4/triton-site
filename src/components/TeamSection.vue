@@ -15,11 +15,12 @@ const GAP = 24
 const CARD_STRIDE = CARD_W + GAP          // 308px per slot
 const TOTAL_W = CARD_STRIDE * team.length // width of one full set
 
-const BASE_SPEED = 130                    // px/s
+const BASE_SPEED = 130                    // px/s auto-scroll
 let currentX = 0
-let velocityBoost = 0
 let isDragging = false
 let dragLastX = 0
+let dragVelocity = 0                      // px per frame from mouse movement
+let velocityBoost = 0
 const boostObj = { val: 0 }
 let boostTween: gsap.core.Tween | null = null
 let tickerFn: gsap.TickerCallback
@@ -27,20 +28,24 @@ let tickerFn: gsap.TickerCallback
 function onPointerDown(e: PointerEvent) {
   isDragging = true
   dragLastX = e.clientX
+  dragVelocity = 0
   boostTween?.kill()
+  boostObj.val = 0
+  velocityBoost = 0
 }
 
 function onPointerMove(e: PointerEvent) {
   if (!isDragging) return
-  const delta = dragLastX - e.clientX   // positive = dragging left = speed up
+  dragVelocity = dragLastX - e.clientX   // drag left → positive → belt moves forward
   dragLastX = e.clientX
-  velocityBoost = Math.max(0, Math.min(boostObj.val + delta * 0.5, 120))
-  boostObj.val = velocityBoost
 }
 
 function onPointerUp() {
   if (!isDragging) return
   isDragging = false
+  // hand off drag momentum to boost, then decay to normal pace
+  boostObj.val = dragVelocity * 6
+  velocityBoost = boostObj.val
   boostTween = gsap.to(boostObj, {
     val: 0,
     duration: 2,
@@ -54,14 +59,16 @@ onMounted(() => {
   tickerFn = (_time, deltaTime) => {
     if (reducedMotion) return
     const dt = Math.min(deltaTime, 33)
-    const speed = BASE_SPEED + velocityBoost
-    currentX -= (speed * dt) / 1000
 
-    // Seamless loop: once first set fully exits left, jump forward by one set width
+    if (isDragging) {
+      currentX -= dragVelocity              // belt tracks mouse directly
+      dragVelocity *= 0.75                  // friction: belt settles if mouse stops
+    } else {
+      currentX -= ((BASE_SPEED + velocityBoost) * dt) / 1000
+    }
+
     if (currentX < -TOTAL_W) currentX += TOTAL_W
-
     beltRef.value!.style.transform = `translateX(${currentX}px)`
-
   }
 
   gsap.ticker.add(tickerFn)

@@ -21,12 +21,12 @@ const typingTimeouts: ReturnType<typeof setTimeout>[] = []
 const showDebug  = ref(false)
 const panelOpen  = ref(true)
 const ctrl = reactive({
-  eng:      { x: 13.96, y: 18.15, fs: 223 },
-  the_:     { x: 83.75, y: 14.91, fs: 106 },
-  deep:     { x: 84.64, y: 21.48, fs: 206 },
-  frontier: { x: 32.55, y: 72.78, fs: 369 },
-  rov:      { w: 65,    r: -21,   x: 0,   y: 0,  op: 100 },
-  sub:      { x: 50,   yBottom: 6, fs: 20 },
+  eng:      { x: 7.9,  y: 15.7, fs: 161 },
+  the_:     { x: 67.1, y: 11.4, fs: 106 },
+  deep:     { x: 66.4, y: 17.1, fs: 206 },
+  frontier: { x: 26.4, y: 65.7, fs: 250 },
+  rov:      { w: 53.6, r: -21,  x: 57,  y: -23, op: 100 },
+  sub:      { x: 50.7, yBottom: 9.3, fs: 21 },
 })
 // x/y are % of artboard (1920×1080); fs stays in artboard px
 const wordStyle = (c: { x: number; y: number; fs: number }) => ({

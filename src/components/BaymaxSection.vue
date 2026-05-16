@@ -51,10 +51,13 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
       <div class="inner">
 
         <!-- Left: video -->
-        <div class="video-wrap">
-          <video ref="videoElRef" muted playsinline preload="auto">
-            <source :src="rovVideoUrl" type="video/webm" />
-          </video>
+        <div class="video-col">
+          <p class="scroll-hint">scroll to see shadow wing's capabilities</p>
+          <div class="video-wrap">
+            <video ref="videoElRef" muted playsinline preload="auto">
+              <source :src="rovVideoUrl" type="video/webm" />
+            </video>
+          </div>
         </div>
 
         <!-- Right: title + subtitle + panels -->
@@ -105,10 +108,26 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   gap: 4%;
 }
 
-/* ── Video ── height-driven so it fills the viewport */
+.video-col {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scroll-hint {
+  font-family: 'Plus Jakarta Sans Variable', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(100, 116, 139, 0.7);
+  text-align: center;
+}
+
+/* ── Video ── percentage-based width so text col always has room */
 .video-wrap {
-  flex: 0 0 auto;
-  height: 72vh;
+  width: 100%;
   aspect-ratio: 16 / 9;
   border: 1.5px solid rgba(15, 156, 216, 0.45);
   border-radius: 20px;
