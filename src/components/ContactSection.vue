@@ -196,4 +196,27 @@ onMounted(() => {
 }
 .social-link:hover { opacity: 0.7; transform: translateY(-2px); }
 .social-link svg { width: 100%; height: 100%; }
+
+@media (max-width: 768px) {
+  .contact-section { padding: 3vh 5vw 0; }
+
+  .contact-body {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding-bottom: 3vh;
+  }
+
+  .contact-item:last-child { justify-self: start; }
+
+  .contact-address { text-align: left; }
+
+  .contact-title {
+    font-size: clamp(20px, 6vw, 28px);
+  }
+
+  .contact-email,
+  .contact-address {
+    font-size: clamp(13px, 3.5vw, 15px);
+  }
+}
 </style>

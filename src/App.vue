@@ -9,6 +9,7 @@ import SplashScreen from './components/SplashScreen.vue'
 import AboutSection from './components/AboutSection.vue'
 import TeamSection from './components/TeamSection.vue'
 import AchievementsSection from './components/AchievementsSection.vue'
+import BaymaxSection from './components/BaymaxSection.vue'
 import ContactSection from './components/ContactSection.vue'
 import DocsPage from './components/DocsPage.vue'
 import uniLogoUrl from './assets/uni-logo.png'
@@ -64,6 +65,9 @@ onMounted(async () => {
   gsap.killTweensOf(el)
   loaded.value = true  // tells SplashScreen bg to start fading
 
+  // Failsafe: ensure Lenis scroll is always unlocked even if GSAP onComplete doesn't fire
+  setTimeout(() => { lenisRef.value?.lenis?.start(); splashDone.value = true }, 3500)
+
   // Fly logo back to its natural corner position
   gsap.to(el, {
     x: 0,
@@ -114,6 +118,7 @@ onMounted(async () => {
         <AboutSection />
         <TeamSection />
         <AchievementsSection />
+        <BaymaxSection />
         <ContactSection />
       </main>
     </template>
@@ -147,6 +152,10 @@ onMounted(async () => {
   right: 24px;
   z-index: 10000;
   opacity: 0;      /* hidden until splash completes */
+}
+
+@media (max-width: 768px) {
+  .uni-logo-anchor { display: none; }
 }
 
 .uni-logo {

@@ -231,6 +231,45 @@ onMounted(() => {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    padding-bottom: 48px;
+  }
+
+  .text-col {
+    width: 100%;
+    padding: 80px 6% 24px;
+    height: auto;
+    order: 2;
+  }
+
+  .card-col {
+    width: 100%;
+    height: 52vw;
+    min-height: 240px;
+    order: 1;
+    padding-top: 80px;
+  }
+
+  .card-stack {
+    width: 82vw;
+    height: 100%;
+  }
+
+  .card-title {
+    white-space: normal;
+    font-size: clamp(28px, 8vw, 48px);
+  }
+
+  .card-body {
+    font-size: clamp(14px, 3.8vw, 18px);
+  }
+}
+
 .card-body {
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
   font-size: clamp(15px, 1.8vw, 27px);

@@ -229,6 +229,50 @@ onMounted(() => {
   }
 }
 
+@media (max-width: 768px) {
+  .achievements-section {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    padding-top: 80px;
+    padding-bottom: 60px;
+  }
+
+  /* Hide right column */
+  .photo-band:last-child { display: none; }
+
+  .photo-band {
+    width: 28vw;
+    flex-shrink: 0;
+  }
+
+  .center-content {
+    padding: 0 5vw;
+  }
+
+  .section-title {
+    font-size: clamp(32px, 9vw, 56px);
+    margin-bottom: 3vh;
+  }
+
+  .achievements-text {
+    font-size: clamp(13px, 3.5vw, 17px);
+    line-height: 1.7;
+  }
+
+  .achievements-sub {
+    font-size: clamp(12px, 3vw, 15px);
+  }
+
+  .achievements-breakthrough {
+    font-size: clamp(15px, 4vw, 20px);
+  }
+
+  .year-block {
+    margin-bottom: 3vh;
+  }
+}
+
 .achievements-breakthrough {
   font-family: 'Plus Jakarta Sans Variable', sans-serif;
   font-size: clamp(17px, 2vw, 28px);

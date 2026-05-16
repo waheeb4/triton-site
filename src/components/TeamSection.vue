@@ -148,6 +148,11 @@ onUnmounted(() => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 
+@media (max-width: 768px) {
+  .team-section { padding: 48px 0; }
+  .team-track { height: 360px; }
+}
+
 .team-track:active {
   cursor: grabbing;
 }

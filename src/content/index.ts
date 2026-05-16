@@ -65,6 +65,16 @@ export const contact = {
   ],
 }
 
+export const baymax = {
+  title: 'BAYMAX',
+  sub: 'BEAST BEHIND IT ALL',
+  panels: [
+    { id: 'gripper', label: 'GRIPPER SYSTEM',  start: 4,  end: 8,  desc: 'Dual-claw gripper with servo-driven actuation, left gripper has the ability to rotate 360 degrees and right griper can be opened in an extreme wide angle, designed for precise object manipulation at depth.' },
+    { id: 'config',  label: 'THRUSTER CONFIGURATION', start: 11, end: 13, desc: '6-DOF custom thruster arrangement enabling full holonomic movement across all axes.' },
+    { id: 'pcb',     label: 'INTERNAL PCBs',   start: 19, end: 21, desc: "Three custom PCBs split for isolation of heavcy duty components, a Power board handling volt conversions and power distribution, ESC board controlling motors' electronics speed , and Control board holding the main processing unit and flight controller." },
+  ],
+}
+
 export const team: { photo: string; firstName: string; lastName: string; role: string }[] = [
   // C-Suite
   { photo: 'mohamed-ehab.jpeg',   firstName: 'Mohamed',      lastName: 'Ehab',        role: 'CEO' },

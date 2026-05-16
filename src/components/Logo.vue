@@ -12,4 +12,8 @@ import LogoImg from '../assets/triton-logo-2026.png'
   width: auto;
   display: block;
 }
+
+@media (max-width: 768px) {
+  .logo { height: 36px; }
+}
 </style>

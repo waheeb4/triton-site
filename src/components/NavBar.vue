@@ -80,4 +80,9 @@ const rightItems = nav.right.map(label => ({ label, href: `#${label.toLowerCase(
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(15, 156, 216, 0.3);
 }
+
+@media (max-width: 768px) {
+  .model-slot { display: none; }
+  .nav-item { padding: 7px 14px; font-size: 13px; }
+}
 </style>

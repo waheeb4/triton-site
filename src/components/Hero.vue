@@ -38,7 +38,8 @@ const wordStyle = (c: { x: number; y: number; fs: number }) => ({
 // ── Artboard scale: design is 1920px wide, scale to fill viewport ──
 const scale = ref(1)
 function syncScale() {
-  scale.value = window.innerWidth / 1920
+  const base = window.innerWidth < 768 ? 1700 : 1920
+  scale.value = window.innerWidth / base
 }
 const CTRL_KEY = 'triton-hero-ctrl'
 
