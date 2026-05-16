@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
-import rovVideoUrl from '@/assets/rov-animation.webm'
+import rovVideoUrl from '@/assets/rov-animation-web.webm'
 import { baymax } from '@/content/index'
 
 const { title, sub, panels } = baymax
@@ -121,6 +121,7 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
   height: 100%;
   display: block;
   object-fit: cover;
+  mix-blend-mode: screen;
 }
 
 /* ── Text column ── */

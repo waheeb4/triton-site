@@ -337,6 +337,46 @@ These three are the canonical team palette. All other color values in the codeba
 
 ---
 
+## BaymaxSection — ROV Animation Video
+
+### Current state
+`BaymaxSection.vue` uses a scroll-scrubbed VP9 WebM (`rov-animation.webm`) with transparency (alpha channel). The video is 38 MB — **too large for Cloudflare Pages' 25 MB per-file limit.**
+
+### What was tried and failed
+- **ffmpeg re-encode (resolution/CRF/fps reduction)** — ffmpeg cannot read the alpha channel from this file (decodes as `rgb24`, not `yuva420p`). Every re-encode loses the alpha → black background.
+- **`mix-blend-mode: screen`** — doesn't work cleanly because the ROV itself has dark/black structural parts that also become transparent.
+- **`rov-animation-web.webm`** — a 17 MB compressed version (720×405, no alpha, all keyframes) exists in `src/assets/` as a backup. Do NOT use it — it has a black background.
+
+### The fix: host on Cloudflare R2
+The original `rov-animation.webm` must be served from **Cloudflare R2** (object storage), not bundled through Vite.
+
+**Setup steps:**
+1. Cloudflare dashboard → **R2 Object Storage** → **Create bucket** → name it `triton-assets`
+2. Upload `src/assets/rov-animation.webm` (the original 38 MB file)
+3. On the bucket → **Settings** → **Public access** → enable → copy the public URL (format: `https://pub-xxxx.r2.dev/rov-animation.webm`)
+4. In `BaymaxSection.vue`, **remove** the import line:
+   ```ts
+   import rovVideoUrl from '@/assets/rov-animation-web.webm'
+   ```
+   Replace with a plain const:
+   ```ts
+   const rovVideoUrl = 'https://pub-xxxx.r2.dev/rov-animation.webm'
+   ```
+5. Also remove `rov-animation.webm` and `rov-animation-web.webm` from `src/assets/` — they must not be bundled by Vite (would exceed Pages limit or bloat the build)
+6. Also remove the `.webm` type declaration from `env.d.ts` if it exists
+
+**After R2 setup:**
+- `preload="auto"` is already set on the video element — browser starts downloading immediately on page load
+- Splash screen minimum wait is 5000ms — gives video time to buffer before user can scroll
+
+### Cloudflare Pages build command
+```
+bun install && bun run build-only
+```
+`build-only` runs `vite build` directly, skipping `run-p` (which Cloudflare's bash env can't find). Do NOT use `bun run build`.
+
+---
+
 ## Assets Deleted / Removed
 
 - `logo.png` — replaced by `triton-logo-2026.png`
