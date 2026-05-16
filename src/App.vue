@@ -148,8 +148,8 @@ onMounted(async () => {
 
 .uni-logo-anchor {
   position: fixed;
-  top: 1.8%;
-  right: 1.5%;
+  top: 23px;
+  right: 24px;
   z-index: 10000;
   opacity: 0;      /* hidden until splash completes */
 }
