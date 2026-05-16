@@ -52,7 +52,7 @@ onUnmounted(() => window.removeEventListener('scroll', scrollHandler))
 
         <!-- Left: video -->
         <div class="video-wrap">
-          <video ref="videoElRef" muted playsinline preload="metadata">
+          <video ref="videoElRef" muted playsinline preload="auto">
             <source :src="rovVideoUrl" type="video/webm" />
           </video>
         </div>
