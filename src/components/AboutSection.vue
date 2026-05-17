@@ -155,7 +155,8 @@ onMounted(() => {
             aria-label="Previous"
             @click.stop="goPrev"
           >
-            <svg class="zone-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="nav-blob" />
+            <svg class="zone-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </div>
@@ -167,7 +168,8 @@ onMounted(() => {
             aria-label="Next"
             @click.stop="goNext"
           >
-            <svg class="zone-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="nav-blob" />
+            <svg class="zone-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </div>
@@ -315,39 +317,49 @@ onMounted(() => {
   display: block;
 }
 
-/* Full-height nav zones — transparent strip on left/right of the card */
+/* Full-height nav zones */
 .nav-zone {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 6%;
+  width: 10%;
   z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  backdrop-filter: blur(0px);
   cursor: pointer;
-  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+  overflow: hidden;
 }
 
 .nav-zone--left  { left: 0;  border-radius: 20px 0 0 20px; }
 .nav-zone--right { right: 0; border-radius: 0 20px 20px 0; }
 
-.nav-zone:hover {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
+/* The circle that explodes to fill the zone on hover */
+.nav-blob {
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(15, 156, 216, 0.85);
+  border: 2.5px solid rgba(255, 255, 255, 0.95);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.nav-zone:hover .nav-blob {
+  transform: translate(-50%, -50%) scale(22);
 }
 
 .zone-chevron {
-  width: 34px;
-  height: 34px;
-  color: rgba(255, 255, 255, 0.5);
-  transition: color 0.25s ease;
-  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
-}
-
-.nav-zone:hover .zone-chevron {
-  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.25));
 }
 </style>
