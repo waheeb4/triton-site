@@ -43,14 +43,20 @@ onMounted(async () => {
   // Use these to compute dx/dy fresh on every resize instead of caching stale window dimensions.
   const naturalCx = 8 + rect.width  / 2
   const naturalCy = 20 + rect.height / 2
-  const logoScale = 300 / rect.height
 
   function centerLogo() {
-    const dx = window.innerWidth  / 2 - naturalCx
-    const dy = window.innerHeight / 2 - naturalCy
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    // Logo height = 20vw — same unit system as the wave rings (all sized in vw)
+    const scale = (0.20 * vw) / rect.height
+
+    const dx = vw / 2 - naturalCx
+    const dy = vh / 2 - naturalCy
+
     gsap.killTweensOf(el)
-    gsap.set(el, { x: dx, y: dy, scale: logoScale, opacity: 1 })
-    gsap.to(el, { y: dy - 16, duration: 1.5, ease: 'sine.inOut', yoyo: true, repeat: -1 })
+    gsap.set(el, { x: dx, y: dy, scale, opacity: 1 })
+    const bob = 0.015 * vw
+    gsap.fromTo(el, { y: dy + bob }, { y: dy - bob, duration: 1.5, ease: 'sine.inOut', yoyo: true, repeat: -1 })
   }
 
   centerLogo()
@@ -142,7 +148,7 @@ onMounted(async () => {
   position: fixed;
   top: 20px;
   left: 8px;
-  z-index: 10000;  /* above splash bg (9999) so logo is always visible */
+  z-index: 10001;  /* in front of all wave rings during splash */
   opacity: 0;      /* hidden until centerLogo() positions and reveals it */
 }
 
