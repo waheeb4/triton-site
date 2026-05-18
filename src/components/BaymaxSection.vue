@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
-import rovVideoUrl from '@/assets/rov-animation-web.webm'
+import rovVideoUrl from '@/assets/output.mp4'
 import { baymax } from '@/content/index'
 
 const { title, sub, panels } = baymax
@@ -27,7 +27,7 @@ onMounted(() => {
     const rect       = sectionRef.value.getBoundingClientRect()
     const scrollable = sectionRef.value.offsetHeight - window.innerHeight
     const scrolled   = Math.max(0, Math.min(scrollable, -rect.top))
-    const t = (scrolled / scrollable) * duration
+    const t = Math.min((scrolled / scrollable) * duration * 1.2, duration)
 
     videoElRef.value!.currentTime = t
 

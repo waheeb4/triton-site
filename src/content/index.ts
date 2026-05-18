@@ -65,9 +65,9 @@ export const baymax = {
   title: 'SHADOW WING',
   sub: 'BEAST BEHIND IT ALL',
   panels: [
-    { id: 'gripper', label: 'GRIPPER SYSTEM',  start: 4,  end: 8,  desc: 'Dual-claw gripper with servo-driven actuation, left gripper has the ability to rotate 360 degrees and right griper can be opened in an extreme wide angle, designed for precise object manipulation at depth.' },
-    { id: 'config',  label: 'THRUSTER CONFIGURATION', start: 11, end: 13, desc: '6-DOF custom thruster arrangement enabling full holonomic movement across all axes.' },
-    { id: 'pcb',     label: 'INTERNAL PCBs',   start: 19, end: 21, desc: "Three custom PCBs split for isolation of heavcy duty components, a Power board handling volt conversions and power distribution, ESC board controlling motors' electronics speed , and Control board holding the main processing unit and flight controller." },
+    { id: 'gripper', label: 'GRIPPER SYSTEM',         start: 5.95, end: 10,   desc: 'Dual-claw gripper with servo-driven actuation, left gripper has the ability to rotate 360 degrees and right griper can be opened in an extreme wide angle, designed for precise object manipulation at depth.' },
+    { id: 'config',  label: 'THRUSTER CONFIGURATION', start: 15.3, end: 17.5, desc: '6-DOF custom thruster arrangement enabling full holonomic movement across all axes.' },
+    { id: 'pcb',     label: 'INTERNAL PCBs',          start: 23,   end: 28,   desc: "Three custom PCBs split for isolation of heavcy duty components, a Power board handling volt conversions and power distribution, ESC board controlling motors' electronics speed , and Control board holding the main processing unit and flight controller." },
   ],
 }
 
